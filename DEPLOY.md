@@ -35,7 +35,9 @@
 | Key | Value |
 |-----|--------|
 | `DATABASE_URL` | วาง Internal Database URL จากขั้นตอนที่ 2 |
-| `PYTHON_VERSION` | `3.11` |
+| `PYTHON_VERSION` | `3.11` หรือ `3.12` (สำคัญ: อย่าใช้ 3.14 เพราะ psycopg2-binary ยังไม่รองรับ) |
+
+**หมายเหตุ:** ไฟล์ `runtime.txt` ในโปรเจกต์กำหนด Python 3.11 แล้ว แต่ถ้า Render ยังใช้ 3.14 ให้ตั้ง `PYTHON_VERSION` ใน Environment Variables ด้วย
 
 (ถ้าใช้ External Database URL ให้ใช้ตัวนั้นแทน)
 
@@ -43,6 +45,48 @@
 - กด **Create Web Service**
 - Render จะ build และ deploy ให้
 - เมื่อเสร็จจะได้ URL เช่น `https://champa-brand.onrender.com`
+
+---
+
+## วิธี Deploy ใหม่ (Redeploy)
+
+### วิธีที่ 1: Auto Deploy (เมื่อแก้โค้ด)
+1. แก้ไขโค้ดในโปรเจกต์
+2. Commit และ Push ขึ้น GitHub:
+   ```bash
+   git add .
+   git commit -m "Update: คำอธิบายการเปลี่ยนแปลง"
+   git push origin main
+   ```
+3. Render จะ detect การเปลี่ยนแปลงและ **auto-deploy** ให้อัตโนมัติ
+4. ดู progress ที่ **Logs** tab
+
+### วิธีที่ 2: Manual Deploy (เมื่อแก้ Environment Variables หรือต้องการ deploy ใหม่ทันที)
+1. ไปที่ Web Service บน Render Dashboard
+2. คลิกที่ **Manual Deploy** (มุมขวาบน)
+3. เลือก **Deploy latest commit**
+4. Render จะ build และ deploy ใหม่
+
+### วิธีที่ 3: Deploy Commit เฉพาะ
+1. ไปที่ Web Service → **Manual Deploy**
+2. เลือก **Deploy specific commit**
+3. เลือก commit ที่ต้องการ
+4. กด Deploy
+
+### วิธีที่ 4: Clear Build Cache และ Deploy ใหม่
+ถ้า build มีปัญหา:
+1. ไปที่ Web Service → **Settings**
+2. เลื่อนลงไปหา **Clear build cache**
+3. กด **Clear build cache**
+4. จากนั้น **Manual Deploy** → **Deploy latest commit**
+
+---
+
+## ตรวจสอบสถานะ Deploy
+
+- **Logs tab**: ดู build logs และ runtime logs
+- **Events tab**: ดู history ของ deployments
+- **Metrics tab**: ดู CPU, Memory, Request count
 
 ### 5.1 Troubleshooting: ถ้า gunicorn crash (Exited with status 1)
 
@@ -56,8 +100,10 @@
    - Error: `could not connect to server` หรือ `init_db failed`
    - แก้: ไปที่ **Environment** → เพิ่ม `DATABASE_URL` = Internal Database URL จาก PostgreSQL
 
-2. **Python version ไม่ตรง**
-   - แก้: เพิ่ม Environment Variable `PYTHON_VERSION` = `3.11` หรือ `3.10`
+2. **Python version ไม่รองรับ (Python 3.14)**
+   - Error: `undefined symbol: _PyInterpreterState_Get` จาก psycopg2-binary
+   - สาเหตุ: Python 3.14 ยังใหม่เกินไป psycopg2-binary 2.9.9 ยังไม่รองรับ
+   - แก้: เพิ่ม Environment Variable `PYTHON_VERSION` = `3.11` หรือ `3.12` (สำคัญมาก!)
 
 3. **gunicorn ไม่พบ app**
    - Error: `Failed to find application object 'app'`

@@ -8,7 +8,7 @@ services:
       - key: DATABASE_URL
         sync: false
       - key: PYTHON_VERSION
-        value: 3.11
+        value: 3.11  # ใช้ 3.11 หรือ 3.12 (ไม่ใช้ 3.14 เพราะ psycopg2-binary ยังไม่รองรับ)
 
 databases:
   - name: champa-db

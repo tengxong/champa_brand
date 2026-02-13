@@ -2,3 +2,6 @@ Flask==3.0.0
 psycopg2-binary==2.9.9
 Werkzeug==3.0.1
 gunicorn==21.2.0
+
+# Note: Python 3.14 is too new for psycopg2-binary 2.9.9
+# Use Python 3.11 or 3.12 instead
