@@ -1,6 +1,12 @@
 from flask import Flask, request, jsonify, render_template_string, render_template, send_from_directory, redirect
 import os
+import sys
 from werkzeug.utils import secure_filename
+
+# Logging สำหรับ debug
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 from pyhon import (
     init_db,
@@ -39,11 +45,32 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 os.makedirs(app.config['UPLOAD_FOLDER_PROFILE'], exist_ok=True)
 os.makedirs(app.config['UPLOAD_FOLDER_PRODUCT'], exist_ok=True)
 
-# สร้างตารางใน DB เมื่อ deploy (ปลอดภัย: CREATE TABLE IF NOT EXISTS)
-try:
-    init_db()
-except Exception as e:
-    print("Init DB:", e)
+# Flag เพื่อ init DB ครั้งเดียว
+_db_initialized = False
+
+def initialize_database():
+    """สร้างตารางใน DB เมื่อ deploy (ปลอดภัย: CREATE TABLE IF NOT EXISTS)"""
+    global _db_initialized
+    if _db_initialized:
+        return
+    try:
+        logger.info("Initializing database...")
+        init_db()
+        _db_initialized = True
+        logger.info("Database initialized successfully")
+    except Exception as e:
+        logger.warning(f"Database initialization warning: {e}")
+        # ไม่ crash - จะ retry เมื่อมี request แรก
+
+# เรียก init_db เมื่อ app start (lazy - จะเรียกเมื่อมี request แรก)
+@app.before_request
+def ensure_db_initialized():
+    initialize_database()
+
+# Log เมื่อ app start
+logger.info("Flask app initialized")
+logger.info(f"Python version: {sys.version}")
+logger.info(f"Working directory: {os.getcwd()}")
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS

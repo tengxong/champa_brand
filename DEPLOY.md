@@ -26,7 +26,7 @@
   - **Name**: `champa-brand`
   - **Runtime**: Python 3
   - **Build Command**: `pip install -r requirements.txt`
-  - **Start Command**: `gunicorn app:app`
+  - **Start Command**: `gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120`
   - **Instance Type**: Free
 
 ### 4. Environment Variables
@@ -43,6 +43,63 @@
 - กด **Create Web Service**
 - Render จะ build และ deploy ให้
 - เมื่อเสร็จจะได้ URL เช่น `https://champa-brand.onrender.com`
+
+### 5.1 Troubleshooting: ถ้า gunicorn crash (Exited with status 1)
+
+**ตรวจสอบ Logs:**
+- ไปที่ Web Service → **Logs** tab
+- ดู error message ที่แท้จริง
+
+**ปัญหาที่พบบ่อย:**
+
+1. **DATABASE_URL ไม่ได้ตั้งค่า**
+   - Error: `could not connect to server` หรือ `init_db failed`
+   - แก้: ไปที่ **Environment** → เพิ่ม `DATABASE_URL` = Internal Database URL จาก PostgreSQL
+
+2. **Python version ไม่ตรง**
+   - แก้: เพิ่ม Environment Variable `PYTHON_VERSION` = `3.11` หรือ `3.10`
+
+3. **gunicorn ไม่พบ app**
+   - Error: `Failed to find application object 'app'`
+   - แก้: ตรวจสอบว่า Start Command = `gunicorn app:app` (ไม่ใช่ `python app.py`)
+
+4. **Import error จาก pyhon.py**
+   - Error: `ModuleNotFoundError` หรือ `ImportError`
+   - แก้: ตรวจสอบว่า `requirements.txt` มี dependencies ครบ และ build สำเร็จ
+
+**ทดสอบ local ก่อน deploy:**
+```bash
+# ติดตั้ง dependencies
+pip install -r requirements.txt
+
+# ทดสอบว่า app import ได้
+python test_app.py
+
+# ทดสอบรันด้วย gunicorn
+gunicorn app:app --bind 0.0.0.0:5000
+```
+
+**ถ้ายังไม่ได้ ให้ตรวจสอบ:**
+
+1. **ดู Logs บน Render:**
+   - ไปที่ Web Service → **Logs** tab
+   - Copy error message ทั้งหมดมา
+   - มักจะบอกว่า import error ที่ไหน หรือ connection error
+
+2. **ตรวจสอบ Environment Variables:**
+   - ไปที่ **Environment** tab
+   - ต้องมี `DATABASE_URL` (ถ้ายังไม่มี PostgreSQL ให้สร้างก่อน)
+   - อาจเพิ่ม `PYTHON_VERSION` = `3.11`
+
+3. **ตรวจสอบ Start Command:**
+   - ต้องเป็น: `gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120`
+   - ไม่ใช่: `python app.py` หรือ `flask run`
+
+4. **ถ้า error เกี่ยวกับ DATABASE_URL:**
+   - ไปสร้าง PostgreSQL ก่อน (ขั้นตอนที่ 2)
+   - Copy **Internal Database URL**
+   - ใส่ใน Environment Variables → `DATABASE_URL`
+   - Deploy ใหม่
 
 ### 6. สร้าง Admin คนแรก
 หลัง deploy เสร็จ เรียก API สร้าง admin:
