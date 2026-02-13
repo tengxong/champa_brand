@@ -39,6 +39,12 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 os.makedirs(app.config['UPLOAD_FOLDER_PROFILE'], exist_ok=True)
 os.makedirs(app.config['UPLOAD_FOLDER_PRODUCT'], exist_ok=True)
 
+# สร้างตารางใน DB เมื่อ deploy (ปลอดภัย: CREATE TABLE IF NOT EXISTS)
+try:
+    init_db()
+except Exception as e:
+    print("Init DB:", e)
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -1264,5 +1270,7 @@ def method_not_allowed(e):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    debug = os.environ.get("FLASK_DEBUG", "false").lower() in ("1", "true", "yes")
+    app.run(host="0.0.0.0", port=port, debug=debug)
 

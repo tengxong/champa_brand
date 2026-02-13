@@ -4,6 +4,7 @@ import hashlib
 import uuid
 import time
 import re
+import os
 from datetime import datetime, timedelta
 
 import psycopg2
@@ -56,19 +57,23 @@ class ProductReview:
 #  Database Config (PostgreSQL: champa)
 # ==========================
 
-#DB_NAME = "champa"
-#DB_USER = "postgres"          # แก้ตาม user ของคุณ
-#DB_PASSWORD = "12345"  # แก้เป็นรหัสผ่านจริง
-##DB_PORT = 5432
-DB_NAME = "postgres"
-DB_USER = "postgres"
-DB_PASSWORD = "12345"  # หรือรหัสจริงของคุณ
-DB_HOST = "localhost"
-DB_PORT = 5432
+# อ่านจาก environment (สำหรับ deploy) หรือใช้ค่าตั้งต้น
+DB_NAME = os.environ.get("DB_NAME", "postgres")
+DB_USER = os.environ.get("DB_USER", "postgres")
+DB_PASSWORD = os.environ.get("DB_PASSWORD", "12345")
+DB_HOST = os.environ.get("DB_HOST", "localhost")
+DB_PORT = int(os.environ.get("DB_PORT", "5432"))
+DATABASE_URL = os.environ.get("DATABASE_URL")  # Render/Railway ใช้ตัวนี้
 
 
 def get_connection():
     """คืนค่า connection ไปยังฐานข้อมูล champa"""
+    if DATABASE_URL:
+        # บาง host ใช้ postgres:// ต้องเปลี่ยนเป็น postgresql:// สำหรับ psycopg2
+        url = DATABASE_URL
+        if url.startswith("postgres://"):
+            url = "postgresql://" + url[9:]
+        return psycopg2.connect(url)
     return psycopg2.connect(
         dbname=DB_NAME,
         user=DB_USER,
