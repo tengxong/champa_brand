@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="lo">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CHAMPA BRAND | ເສື້ອກິລາພິມລາຍ</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- HEADER (Finix-style: logo left, nav center, contact right) -->
+  <header class="header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">
+        <img class="logo-img" src="images/logo/SVG/Asset 1.svg" alt="CHAMPA BRAND" />
+        <span class="logo-text">
+          <span class="logo-main">CHAMPA</span>
+          <span class="logo-sub">BRAND</span>
+        </span>
+      </a>
+
+      <nav class="menu" id="menu">
+        <a href="index.html" class="active">ຫນ້າຫຼັກ</a>
+        <a href="products.html">ສິນຄ້າ</a>
+        <a href="products-review.html">ສິນຄ້າລີວິວ</a>
+        <a href="contact.html">ຕິດຕໍ່</a>
+      </nav>
+
+      <div class="header-search" id="headerSearchWrap">
+        <input type="search" id="siteSearchInput" class="site-search-input" placeholder="ຄົ້ນຫາ..." autocomplete="off" aria-label="ຄົ້ນຫາ" />
+        <div class="site-search-results" id="siteSearchResults" hidden></div>
+      </div>
+
+      <div class="header-contact" link="https://wa.me/8562099448186">
+        <a href="https://wa.me/8562099448186" target="_blank" rel="noopener" class="contact-item" aria-label="WhatsApp">
+          <span class="contact-icon contact-icon-wa"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></span>
+          <span class="contact-label">WhatsApp</span>
+        </a>
+        <a href="https://www.facebook.com/share/1BviWghRdT/?mibextid=wwXIfr" target="_blank" rel="noopener" class="contact-item" aria-label="Facebook" >
+          <span class="contact-icon contact-icon-fb" link=""><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></span>
+          <span class="contact-label">Facebook</span>
+        </a>
+        <a href="https://www.tiktok.com/@champabrand?_r=1&_t=ZS-93pIBIqUYJZ" target="_blank" rel="noopener" class="contact-item" aria-label="TikTok">
+          <span class="contact-icon contact-icon-tt"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/></svg></span>
+          <span class="contact-label">TikTok</span>
+        </a>
+        <a href="/login" class="contact-item header-login">ເຂົ້າສູ່ລະບົບ</a>
+      </div>
+
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+    </div>
+  </header>
+
+  <!-- HERO – รูปยาวรูปเดียวต่อสไลด์ กด next/prev ไปรูปอื่น -->
+  <section class="hero-banner">
+    <div class="hero-shape hero-shape-tl"></div>
+    <div class="hero-shape hero-shape-br"></div>
+
+    <div class="hero-slideshow">
+      <div class="hero-slide fade active">
+        <a href="products.html" class="hero-slide-img"><img src="images/1.jpg" alt="CHAMPA BRAND" /></a>
+        <div class="hero-center">
+          <h1 class="hero-title">ເຮັດເສື້ອທີ່ດຽວຈົບ ໄວ້ວາງໃຈ CHAMPA BRAND</h1>
+          <span class="hero-pill">#ອັນດັບ 1 ເລື່ອງເສື້ອພິມລາຍ</span>
+        </div>
+      </div>
+      <div class="hero-slide fade">
+        <a href="products.html" class="hero-slide-img"><img src="images/1 - Copy.jpg" alt="CHAMPA BRAND" /></a>
+        <div class="hero-center">
+          <h1 class="hero-title">ເສື້ອຄຸນນະພາບ ອອກແບບຕາມຕ້ອງການ</h1>
+          <span class="hero-pill">#ອັນດັບ 1 ເລື່ອງເສື້ອພິມລາຍ</span>
+        </div>
+      </div>
+      <div class="hero-slide fade">
+        <a href="products.html" class="hero-slide-img"><img src="images/1 - Copy (2).jpg" alt="CHAMPA BRAND" /></a>
+        <div class="hero-center">
+          <h1 class="hero-title">ເຮັດເສື້ອທີ່ດຽວຈົບ ໄວ້ວາງໃຈ CHAMPA BRAND</h1>
+          <span class="hero-pill">#ອັນດັບ 1 ເລື່ອງເສື້ອພິມລາຍ</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="carousel-btn carousel-prev" id="heroPrev" aria-label="ກ່ອນໜ້າ">‹</button>
+    <button class="carousel-btn carousel-next" id="heroNext" aria-label="ຖັດໄປ">›</button>
+    <div class="carousel-dots" id="heroDots"></div>
+  </section>
+
+  <!-- PARTNERS (orange bar) -->
+  <section class="partners">
+    <div class="container partners-inner">
+      <div class="partner-badge"></div>
+      <div class="partner-badge"></div>
+      <div class="partner-badge"></div>
+      <div class="partner-badge"></div>
+    </div>
+  </section>
+
+  <!-- DISCOVER (dotted bg, headline, intro, consult button) -->
+  <section class="discover">
+    <div class="container">
+      <h2 class="discover-title">ຄົ້ນພົບເສື້ອທີ່ໃຊ້ ສຳລັບທຸກໄລຍະຊີວິດ</h2>
+      <p class="discover-desc">ຜະລິດເສື້ອດ້ວຍຜ້າຄຸນນະພາບພຣີເມຍມີເນື້ອຜ້າໃຫ້ເລືອກຫຼາຍຊະນິດ ໃສ່ໃຈທຸກລາຍລະອຽດ ພ້ອມຈັດສົ່ງທົ່ວປະເທດ</p>
+      <a class="btn btn-consult-inline" href="contact.html">ປຶກສາຟຣີ</a>
+    </div>
+  </section>
+
+  <!-- SHIRT CATEGORIES – รูปเดียว ข้อความด้านล่าง กดลิงก์ไปหน้าหมวดหมู่ -->
+  <section class="shirt-categories">
+    <div class="container">
+      <div class="category-cards">
+        <a href="products.html?filter=company" class="category-card">
+          <div class="category-card-img"><img src="images/products/5.jpg" alt="ເສື້ອບໍລິສັດ" /></div>
+          <div class="category-card-info">
+            <h3 class="category-card-title">ເສື້ອບໍລິສັດ</h3>
+            <p class="category-card-desc">ເສື້ອບໍລິສັດ ສະທ້ອນຄວາມເປັນມືອາຊີບ ນຳເສີມສະຕິລ໌ຂອງທ່ານ ພ້ອມໃຫ້ທ່ານດີທຸກວັນ</p>
+          </div>
+        </a>
+        <a href="products.html?filter=event" class="category-card">
+          <div class="category-card-img"><img src="images/products/2.jpg" alt="ເສື້ອກິດຈະກຳ" /></div>
+          <div class="category-card-info">
+            <h3 class="category-card-title">ເສື້ອກິດຈະກຳ</h3>
+            <p class="category-card-desc">ພ້ອມສຳລັບທຸກຄວາມສັນດີດ້ວຍເສື້ອກິດຈະກຳ ທີ່ໃຫ້ທ່ານດູໂດດແລະຮູ້ສຶກສະບາຍທຸກການເຄື່ອນໄຫວ</p>
+          </div>
+        </a>
+        <a href="products.html?filter=agency" class="category-card">
+          <div class="category-card-img"><img src="images/products/3.jpg" alt="ເສື້ອກິລາສີໂຮງຮຽນ" /></div>
+          <div class="category-card-info">
+            <h3 class="category-card-title">ເສື້ອກິລາສີໂຮງຮຽນ</h3>
+            <p class="category-card-desc">ໂຊວ໌ພະລັງທີມດ້ວຍເສື້ອກິລາສີທີ່ສ້າງສັນ ເພື່ອຄວາມສັນດີແລະຄວາມສະບາຍໃນການແຂ່ງຂັນ</p>
+          </div>
+        </a>
+        <a href="products.html?filter=sport" class="category-card">
+          <div class="category-card-img"><img src="images/products/4.jpg" alt="ເສື້ອກິລາ" /></div>
+          <div class="category-card-info">
+            <h3 class="category-card-title">ເສື້ອກິລາ</h3>
+            <p class="category-card-desc">ເສື້ອກິລາທີ່ໃຫ້ທ່ານຮູ້ສຶກສະບາຍ ມັນໃຈໃນທຸກການເຄື່ອນໄຫວ</p>
+          </div>
+        </a>
+        <a href="products.html?filter=agency" class="category-card">
+          <div class="category-card-img"><img src="images/products/5.jpg" alt="ເສື້ອໜ່ວຍງານລາຊະການ" /></div>
+          <div class="category-card-info">
+            <h3 class="category-card-title">ເສື້ອໜ່ວຍງານລາຊະການ</h3>
+            <p class="category-card-desc">ເສື້ອໜ່ວຍງານ ບໍລິການໄວ ຄຸນນະພາບສູງ ປະທັບທຸກໜ່ວຍງານ</p>
+          </div>
+        </a>
+        <a href="products.html?filter=jersey" class="category-card">
+          <div class="category-card-img"><img src="images/products/1.jpg" alt="JERSEY" /></div>
+          <div class="category-card-info">
+            <h3 class="category-card-title">JERSEY</h3>
+            <p class="category-card-desc">ອອກແບບເສື້ອສະຕິລ໌ທ່ານ ໃນຮູບແບບທີ່ໂດດເດັ່ນບໍ່ຊ້ຳຄືນ</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCT SHOWCASE - แสดงสินค้าจาก Admin -->
+  <section class="products-showcase-section" id="productsShowcaseSection" style="display: none;">
+    <div class="container">
+      <h2 class="section-title">ສິນຄ້າຂອງພວກເຮົາ</h2>
+      <p class="section-sub muted">ເລືອກເບິ່ງສິນຄ້າທີ່ທ່ານສົນໃຈ</p>
+      <div class="products-grid products-grid-work" id="homeProductsGrid"></div>
+    </div>
+  </section>
+
+  <!-- SAMPLE SHIRTS (CTA button + carousel + trust review) -->
+  <section class="sample-section">
+    <div class="container">
+      <div class="sample-cta-wrap">
+        <a class="btn-sample" href="products.html">ຄລິກເບິ່ງເສື້ອຕົວຢ່າງ</a>
+      </div>
+      <div class="sample-carousel-wrap">
+        <button class="sample-arrow sample-prev" id="samplePrev" aria-label="ກ່ອນໜ້າ">‹</button>
+        <div class="sample-track-wrap">
+          <div class="sample-track" id="sampleTrack">
+            <a href="products-review.html" class="sample-item"><img src="images\Review\1.jpg.jpeg" alt="ເສື້ອຕົວຢ່າງ 1" /></a>
+            <a href="products-review.html" class="sample-item"><img src="images\Review\2.jpeg" alt="ເສື້ອຕົວຢ່າງ 2" /></a>
+            <a href="products-review.html" class="sample-item"><img src="images\Review\4.jpg.jpeg" alt="ເສື້ອຕົວຢ່າງ 3" /></a>
+        
+          </div>
+        </div>
+        <button class="sample-arrow sample-next" id="sampleNext" aria-label="ຖັດໄປ">›</button>
+      </div>
+      <div class="trust-review">
+        <span class="trust-silhouette" aria-hidden="true"></span>
+        <h3 class="trust-title">ລີວິວຄວາມໄວ້ວາງໃຈ</h3>
+        <p class="trust-brand">CHAMPA BRAND</p>
+        <div class="trust-review-list" id="trustReviewList" aria-live="polite">
+          <!-- โหลดรีวิวจาก API /api/reviews -->
+        </div>
+        <a href="products-review.html" class="trust-review-more" id="trustReviewMore" style="display: none;" title="ເບິ່ງລີວິວທັງໝົດ">ເບິ່ງທັງໝົດ</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">ເປັນຫຍັງຕ້ອງ CHAMPA BRAND?</h2>
+      <p class="section-sub muted">ງານດີໄຊນ໌ເທ່ + ງານພິມຄົມຊັດ + ໃສ່ສະບາຍ ເໝາະກັບທຸກທີມ</p>
+      <div class="grid-3">
+        <div class="card">
+          <div class="icon">⚡</div>
+          <div class="card-title">ອອກແບບໄວ</div>
+          <div class="muted">ມີແບບໃຫ້ເລືອກ ຫຼືສົ່ງເຣຟມາໃຫ້ເຮັດຕາມໄດ້</div>
+        </div>
+        <div class="card">
+          <div class="icon">🎨</div>
+          <div class="card-title">ສີສົດ ຄົມຊັດ</div>
+          <div class="muted">ງານພິມລາຍແບບສະປອດ ເນີນ ບໍ່ແຕກ</div>
+        </div>
+        <div class="card">
+          <div class="icon">👕</div>
+          <div class="card-title">ໃສ່ສະບາຍ</div>
+          <div class="muted">ຜ້າເບົາ ລະບາຍອາກາດ ເໝາະກັບການແຂ່ງ</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="container cta-inner">
+      <div>
+        <h2>ພ້ອມເຮັດເສື້ອທີມແລ້ວບໍ?</h2>
+        <p class="muted">ທັກມາໄດ້ເລີຍ ສົ່ງແບບ/ຊື່ທີມ/ເບີ/ສະປອນເຊີ ແລ້ວພວກເຮົາຈັດໃຫ້!</p>
+      </div>
+      <div class="cta-actions">
+        <a class="btn primary" href="contact.html">ຕິດຕໍ່ເລີຍ</a>
+        <a class="btn ghost" href="products.html">ເບິ່ງລາຄາສິນຄ້າ</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div>
+          <div class="strong">CHAMPA BRAND</div>
+          <div class="muted">ເສື້ອພິມລາຍ • ທີມບານເຕະ • ເສື້ອແລ່ນ • ເສື້ອບາສ • eSport</div>
+        </div>
+      </div>
+      <div class="footer-copy muted">© <span id="year"></span> CHAMPA BRAND</div>
+    </div>
+  </footer>
+
+  <!-- Sticky consult button (Finix-style bottom-right) -->
+  <a class="sticky-consult" href="contact.html" aria-label="ປຶກສາຟຣີ">ປຶກສາຟຣີ</a>
+
+  <script src="script.js"></script>
+</body>
+</html>
