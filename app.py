@@ -100,10 +100,8 @@ def _require_admin():
     except Exception as e:
         return None, (jsonify({"error": str(e)}), 401)
 
-# Flask 3.x ไม่มี before_first_request แล้ว
-# เรียก init_db() ทันทีเมื่อโหลดโมดูล แทนการใช้ decorator
-init_db()
-
+# init_db() ถูกเรียกแบบ lazy ใน @app.before_request (ensure_db_initialized) เท่านั้น
+# อย่าเรียก init_db() ตอน import เพราะบน Render ยังไม่มี DATABASE_URL หรือจะเชื่อม localhost
 
 PAGE_HTML = r"""
 <!DOCTYPE html>
@@ -267,6 +265,17 @@ def login_register_page():
 def admin_login_redirect():
     """แก้ typo /admin/loging และ /admin/login ไปหน้า /login (ไม่แสดง Register)"""
     return redirect("/login?next=/dashboard")
+
+
+@app.get("/setup")
+def setup_page():
+    """หน้าสร้างแอดมินคนแรก — แสดงเฉพาะเมื่อยังไม่มีแอดมินในระบบ"""
+    try:
+        if count_admins() > 0:
+            return redirect("/login?next=/admin")
+    except Exception:
+        pass  # DB ยังไม่พร้อมก็ให้แสดงฟอร์มได้ ลองสร้างได้
+    return render_template("setup.html")
 
 
 # ========== API สาธารณะ (สำหรับ Champa brand) ==========

@@ -29,15 +29,18 @@
   - **Start Command**: `gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120`
   - **Instance Type**: Free
 
-### 4. Environment Variables
+### 4. Environment Variables (สำคัญมาก!)
 ใน Web Service → **Environment** → Add:
 
 | Key | Value |
 |-----|--------|
-| `DATABASE_URL` | วาง Internal Database URL จากขั้นตอนที่ 2 |
-| `PYTHON_VERSION` | `3.11` (สำคัญ: อย่าใช้ 3.14 เพราะ psycopg2-binary ยังไม่รองรับ) |
+| `DATABASE_URL` | **ต้องใส่** วาง **Internal Database URL** จาก PostgreSQL ที่สร้างในขั้นตอนที่ 2 (ถ้าไม่มี แอปจะเชื่อม localhost แล้ว crash: Connection refused) |
+| `PYTHON_VERSION` | `3.11` (อย่าใช้ 3.14 เพราะ psycopg2-binary ยังไม่รองรับ) |
 
-**หมายเหตุ:** ไฟล์ `runtime.txt` ในโปรเจกต์กำหนด Python 3.11 แล้ว แต่ถ้า Render ยังใช้ 3.14 ให้ตั้ง `PYTHON_VERSION` ใน Environment Variables ด้วย
+**วิธี copy DATABASE_URL บน Render:**
+- ไปที่ PostgreSQL service (champa-db) → **Info** tab
+- Copy ค่า **Internal Database URL** (ใช้ภายใน Render ได้เลย)
+- ไปที่ Web Service → **Environment** → Add Variable → Key: `DATABASE_URL`, Value: วาง URL ที่ copy มา
 
 (ถ้าใช้ External Database URL ให้ใช้ตัวนั้นแทน)
 
@@ -100,16 +103,21 @@
    - Error: `could not connect to server` หรือ `init_db failed`
    - แก้: ไปที่ **Environment** → เพิ่ม `DATABASE_URL` = Internal Database URL จาก PostgreSQL
 
-2. **Python version ไม่รองรับ (Python 3.14)**
+2. **Connection refused / localhost port 5432**
+   - Error: `connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused`
+   - สาเหตุ: **ไม่ได้ตั้ง `DATABASE_URL`** บน Render จึงใช้ค่า default (localhost)
+   - แก้: ไปที่ Web Service → **Environment** → เพิ่ม `DATABASE_URL` = **Internal Database URL** จาก PostgreSQL service (ขั้นตอนที่ 2) → Save → Manual Deploy
+
+3. **Python version ไม่รองรับ (Python 3.14)**
    - Error: `undefined symbol: _PyInterpreterState_Get` จาก psycopg2-binary
    - สาเหตุ: Python 3.14 ยังใหม่เกินไป psycopg2-binary 2.9.9 ยังไม่รองรับ
    - แก้: เพิ่ม Environment Variable `PYTHON_VERSION` = `3.11` (สำคัญมาก!)
 
-3. **gunicorn ไม่พบ app**
+4. **gunicorn ไม่พบ app**
    - Error: `Failed to find application object 'app'`
    - แก้: ตรวจสอบว่า Start Command = `gunicorn app:app` (ไม่ใช่ `python app.py`)
 
-4. **Import error จาก pyhon.py**
+5. **Import error จาก pyhon.py**
    - Error: `ModuleNotFoundError` หรือ `ImportError`
    - แก้: ตรวจสอบว่า `requirements.txt` มี dependencies ครบ และ build สำเร็จ
 
@@ -148,6 +156,11 @@ gunicorn app:app --bind 0.0.0.0:5000
    - Deploy ใหม่
 
 ### 6. สร้าง Admin คนแรก
+**วิธีที่ 1 (ง่าย): ใช้หน้า Setup ในเว็บ**  
+- เปิด **https://YOUR-APP-URL.onrender.com/login?next=/admin** (หรือไปที่ /login แล้วเลือกเข้า Admin) จะเห็นลิงก์「ยังไม่มีแอดมิน? สร้างแอดมินคนแรก」
+- หรือเปิดตรง **https://YOUR-APP-URL.onrender.com/setup** → กรอก Username และรหัสผ่าน → กด「สร้างแอดมินคนแรก」→ ระบบจะพาไปหน้า Login ให้เข้าสู่ระบบด้วยบัญชีที่สร้างได้เลย
+
+**วิธีที่ 2: เรียก API ด้วย curl / Postman**  
 หลัง deploy เสร็จ เรียก API สร้าง admin:
 
 ```bash
@@ -157,6 +170,18 @@ curl -X POST https://YOUR-APP-URL.onrender.com/api/setup/first-admin \
 ```
 
 หรือใช้ Postman / Apidog ส่ง POST ไปที่ `/api/setup/first-admin` พร้อม body ด้านบน
+
+### 6.1 สร้างแอดมินคนที่สอง (และคนถัดไป)
+หลังมีแอดมินคนแรกแล้ว ให้แอดมินคนนั้นเป็นคนเพิ่มแอดมินใหม่:
+
+1. **ล็อกอินเข้าเว็บ** ด้วยแอดมินคนแรก: เปิด `https://YOUR-APP-URL.onrender.com/login` → กรอก username / password ของแอดมิน → กดเข้าสู่ระบบ (ระบบจะพาไป dashboard หรือ admin พร้อม token ใน URL)
+2. ไปที่ **หน้า Admin**: ถ้ายังไม่อยู่หน้า admin ให้เปิด `/admin` (หรือลิงก์「Admin」ในเมนู) — URL จะเป็นแบบ `/admin?token=...`
+3. เลือกแท็บ **「จัดการ Admin」**
+4. กรอก **Username** และ **Password** ของแอดมินคนใหม่ → กด **「เพิ่ม Admin」**
+5. แอดมินคนใหม่จะโผล่ในตาราง — คนนั้นสามารถล็อกอินใช้ระบบแอดมินได้เหมือนกัน
+
+- ต้องการเพิ่มกี่คนก็ทำซ้ำขั้นตอน 4
+- แอดมินที่ล็อกอินอยู่สามารถ **ลบ** แอดมินอื่นได้ (ปุ่มลบในตาราง) แต่**ห้ามลบตัวเอง**
 
 ### 7. เปิดใช้งานฐานข้อมูล (init tables)
 ถ้ายังไม่มีตาราง ให้เรียกให้ Flask สร้างตาราง (รันคำสั่งบนเครื่องคุณที่เชื่อม DB เดียวกัน หรือเพิ่ม endpoint ชั่วคราว):

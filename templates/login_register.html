@@ -53,6 +53,9 @@
           <label for="login-password">ລະຫັດຜ່ານ</label>
           <input type="password" id="login-password" name="password" required autocomplete="current-password" />
           <button type="submit">ເຂົ້າສູ່ລະບົບ</button>
+        <p id="login-setup-hint" class="hint" style="display: none; margin-top: 12px;">
+          ยังไม่มีแอดมิน? <a href="/setup">สร้างแอดมินคนแรก</a>
+        </p>
         </form>
 
         <!-- ฟอร์ม Register -->
@@ -86,9 +89,11 @@
         const tabRegister = document.getElementById("auth-tab-register");
         const formRegister = document.getElementById("form-register");
         const subtitle = document.getElementById("auth-subtitle");
+        const setupHint = document.getElementById("login-setup-hint");
         if (tabRegister) tabRegister.style.display = "none";
         if (formRegister) formRegister.style.display = "none";
         if (subtitle) subtitle.textContent = "ເຂົ້າສູ່ລະບົບ Admin";
+        if (setupHint) setupHint.style.display = "block";
       }
 
       const msgEl = document.getElementById("auth-msg");
