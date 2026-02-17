@@ -35,7 +35,7 @@
 | Key | Value |
 |-----|--------|
 | `DATABASE_URL` | วาง Internal Database URL จากขั้นตอนที่ 2 |
-| `PYTHON_VERSION` | `3.11` หรือ `3.12` (สำคัญ: อย่าใช้ 3.14 เพราะ psycopg2-binary ยังไม่รองรับ) |
+| `PYTHON_VERSION` | `3.11` (สำคัญ: อย่าใช้ 3.14 เพราะ psycopg2-binary ยังไม่รองรับ) |
 
 **หมายเหตุ:** ไฟล์ `runtime.txt` ในโปรเจกต์กำหนด Python 3.11 แล้ว แต่ถ้า Render ยังใช้ 3.14 ให้ตั้ง `PYTHON_VERSION` ใน Environment Variables ด้วย
 
@@ -103,7 +103,7 @@
 2. **Python version ไม่รองรับ (Python 3.14)**
    - Error: `undefined symbol: _PyInterpreterState_Get` จาก psycopg2-binary
    - สาเหตุ: Python 3.14 ยังใหม่เกินไป psycopg2-binary 2.9.9 ยังไม่รองรับ
-   - แก้: เพิ่ม Environment Variable `PYTHON_VERSION` = `3.11` หรือ `3.12` (สำคัญมาก!)
+   - แก้: เพิ่ม Environment Variable `PYTHON_VERSION` = `3.11` (สำคัญมาก!)
 
 3. **gunicorn ไม่พบ app**
    - Error: `Failed to find application object 'app'`
@@ -135,7 +135,7 @@ gunicorn app:app --bind 0.0.0.0:5000
 2. **ตรวจสอบ Environment Variables:**
    - ไปที่ **Environment** tab
    - ต้องมี `DATABASE_URL` (ถ้ายังไม่มี PostgreSQL ให้สร้างก่อน)
-   - อาจเพิ่ม `PYTHON_VERSION` = `3.11`
+   - ต้องมี `PYTHON_VERSION` = `3.11`
 
 3. **ตรวจสอบ Start Command:**
    - ต้องเป็น: `gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120`
