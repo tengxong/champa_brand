@@ -82,6 +82,20 @@ const API = {
     });
   },
 
+  async logout() {
+    const token = this.getToken();
+    if (token) {
+      try {
+        await fetch(window.location.origin + '/api/logout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
+        });
+      } catch (e) {}
+    }
+    this.token = null;
+    localStorage.removeItem('token');
+  },
+
   async delete(path) {
     return this.request(path, { method: 'DELETE' });
   }

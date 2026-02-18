@@ -137,10 +137,19 @@ def init_db() -> None:
                 );
                 """
             )
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS user_sessions (
+                    token TEXT PRIMARY KEY,
+                    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+                );
+                """
+            )
 
 
 # ==========================
-#  Session (ยังเก็บในหน่วยความจำ)
+#  Session (memory + DB เพื่อให้อยู่ได้ตลอดจนกว่าผู้ใช้กดออกจากระบบ)
 # ==========================
 
 SESSIONS: Dict[str, int] = {}  # token -> user_id (int)
@@ -374,18 +383,45 @@ def login(login_id: str, password: str) -> str:
 
     token = _generate_token()
     SESSIONS[token] = user.id
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "INSERT INTO user_sessions (token, user_id) VALUES (%s, %s)",
+                (token, user.id),
+            )
+            conn.commit()
     return token
 
 
 def get_current_user(token: str) -> User:
-    """ดึงข้อมูล user จาก token"""
+    """ดึงข้อมูล user จาก token (เช็ค memory ก่อน แล้วเช็ค DB ถ้า server restart)"""
     user_id = SESSIONS.get(token)
     if not user_id:
-        raise PermissionError("token ไม่ถูกต้อง หรือหมดอายุ")
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "SELECT user_id FROM user_sessions WHERE token = %s",
+                    (token,),
+                )
+                row = cur.fetchone()
+        if row:
+            user_id = row[0]
+            SESSIONS[token] = user_id
+        else:
+            raise PermissionError("token ไม่ถูกต้อง หรือหมดอายุ")
     user = _get_user_by_id(user_id)
     if not user:
         raise PermissionError("ไม่พบผู้ใช้สำหรับ token นี้")
     return user
+
+
+def logout(token: str) -> None:
+    """ลบ session (ออกจากระบบ) — เรียกเมื่อผู้ใช้กดปุ่มออกจากระบบเท่านั้น"""
+    SESSIONS.pop(token, None)
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("DELETE FROM user_sessions WHERE token = %s", (token,))
+            conn.commit()
 
 
 # ==========================

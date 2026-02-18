@@ -30,6 +30,11 @@
     .auth-msg.show { display: block; }
     .auth-msg.error { background: #fee; color: #c00; }
     .auth-msg.success { background: #efe; color: #060; }
+    .password-wrapper { position: relative; margin-bottom: 16px; }
+    .password-wrapper input { padding-right: 45px; }
+    .password-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 4px; color: var(--muted); font-size: 18px; line-height: 1; }
+    .password-toggle:hover { color: #2d3091; }
+    .password-toggle:focus { outline: none; }
   </style>
 </head>
 <body>
@@ -51,7 +56,10 @@
           <label for="login-username">Username ຫຼື ເບີມືຖື (020xxxxxxxx)</label>
           <input type="text" id="login-username" name="username" placeholder="username ຫຼື 020xxxxxxxx" required autocomplete="username" />
           <label for="login-password">ລະຫັດຜ່ານ</label>
-          <input type="password" id="login-password" name="password" required autocomplete="current-password" />
+          <div class="password-wrapper">
+            <input type="password" id="login-password" name="password" required autocomplete="current-password" />
+            <button type="button" class="password-toggle" id="login-password-toggle" aria-label="แสดง/ซ่อนรหัสผ่าน">👁️</button>
+          </div>
           <button type="submit">ເຂົ້າສູ່ລະບົບ</button>
         <p id="login-setup-hint" class="hint" style="display: none; margin-top: 12px;">
           ยังไม่มีแอดมิน? <a href="/setup">สร้างแอดมินคนแรก</a>
@@ -66,7 +74,10 @@
           <input type="tel" id="reg-phone" name="phone" placeholder="020xxxxxxxx" autocomplete="tel" />
           <p class="hint">ບໍ່ບັງຄັບ ຖ້າມີໃສ່ໄວ້ໃຊ້ເຂົ້າລະບົບໄດ້</p>
           <label for="reg-password">ລະຫັດຜ່ານ</label>
-          <input type="password" id="reg-password" name="password" required autocomplete="new-password" />
+          <div class="password-wrapper">
+            <input type="password" id="reg-password" name="password" required autocomplete="new-password" />
+            <button type="button" class="password-toggle" id="reg-password-toggle" aria-label="แสดง/ซ่อนรหัสผ่าน">👁️</button>
+          </div>
           <button type="submit">ສມັກສະມາຊິກ</button>
         </form>
       </div>
@@ -177,6 +188,24 @@
           if (typeof Notification !== "undefined") Notification.error(err.message);
         }
       });
+
+      // Password toggle (แสดง/ซ่อนรหัสผ่าน)
+      function setupPasswordToggle(inputId, toggleId) {
+        const input = document.getElementById(inputId);
+        const toggle = document.getElementById(toggleId);
+        if (!input || !toggle) return;
+        toggle.addEventListener("click", function() {
+          if (input.type === "password") {
+            input.type = "text";
+            toggle.textContent = "🙈";
+          } else {
+            input.type = "password";
+            toggle.textContent = "👁️";
+          }
+        });
+      }
+      setupPasswordToggle("login-password", "login-password-toggle");
+      setupPasswordToggle("reg-password", "reg-password-toggle");
 
       // Register
       document.getElementById("form-register").addEventListener("submit", async function(e) {

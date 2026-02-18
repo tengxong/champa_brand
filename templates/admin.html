@@ -379,8 +379,7 @@
       document.getElementById('profile-menu').classList.add('hidden');
       const confirmed = await Confirm.show('ยืนยันออกจากระบบ?');
       if (confirmed) {
-        localStorage.removeItem('token');
-        API.token = null;
+        await API.logout();
         Notification.success('ออกจากระบบสำเร็จ!');
         setTimeout(() => {
           window.location.href = '/';

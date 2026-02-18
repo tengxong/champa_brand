@@ -24,6 +24,11 @@
     .auth-msg.success { background: #efe; color: #060; }
     .auth-back { display: block; margin-top: 16px; text-align: center; color: #2d3091; font-weight: 600; text-decoration: none; }
     .auth-back:hover { text-decoration: underline; }
+    .password-wrapper { position: relative; margin-bottom: 16px; }
+    .password-wrapper input { padding-right: 45px; }
+    .password-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 4px; color: var(--muted); font-size: 18px; line-height: 1; }
+    .password-toggle:hover { color: #2d3091; }
+    .password-toggle:focus { outline: none; }
   </style>
 </head>
 <body>
@@ -39,7 +44,10 @@
           <label for="setup-username">Username</label>
           <input type="text" id="setup-username" name="username" placeholder="ตั้งชื่อสำหรับเข้า Admin" required autocomplete="username" />
           <label for="setup-password">รหัสผ่าน</label>
-          <input type="password" id="setup-password" name="password" placeholder="รหัสผ่านที่ต้องการ" required autocomplete="new-password" />
+          <div class="password-wrapper">
+            <input type="password" id="setup-password" name="password" placeholder="รหัสผ่านที่ต้องการ" required autocomplete="new-password" />
+            <button type="button" class="password-toggle" id="setup-password-toggle" aria-label="แสดง/ซ่อนรหัสผ่าน">👁️</button>
+          </div>
           <label for="setup-phone">เบอร์โทร (ไม่บังคับ)</label>
           <input type="tel" id="setup-phone" name="phone" placeholder="020xxxxxxxx" autocomplete="tel" />
           <p class="hint">หลังสร้างแล้ว ใช้ username / รหัสผ่านนี้เข้าสู่ระบบที่หน้า Login</p>
@@ -56,6 +64,20 @@
       function showMsg(text, type) {
         msgEl.textContent = text;
         msgEl.className = "auth-msg show " + (type || "");
+      }
+      // Password toggle (แสดง/ซ่อนรหัสผ่าน)
+      const setupPassword = document.getElementById("setup-password");
+      const setupPasswordToggle = document.getElementById("setup-password-toggle");
+      if (setupPassword && setupPasswordToggle) {
+        setupPasswordToggle.addEventListener("click", function() {
+          if (setupPassword.type === "password") {
+            setupPassword.type = "text";
+            setupPasswordToggle.textContent = "🙈";
+          } else {
+            setupPassword.type = "password";
+            setupPasswordToggle.textContent = "👁️";
+          }
+        });
       }
       form.addEventListener("submit", async function(e) {
         e.preventDefault();

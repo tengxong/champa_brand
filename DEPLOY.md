@@ -44,10 +44,50 @@
 
 (ถ้าใช้ External Database URL ให้ใช้ตัวนั้นแทน)
 
+### 4.1 ให้เพื่อนเชื่อมต่อ Database (จากนอก Render)
+ถ้าต้องการให้เพื่อน (หรือเครื่องอื่น) เชื่อมต่อ DB เดียวกับเรา:
+
+1. **เอา External Database URL**  
+   - ไปที่ **PostgreSQL** service บน Render (เช่น champa_db)  
+   - แท็บ **Info** หรือกด **Connect** → เลือก **External Database URL**  
+   - Copy ค่าที่ได้ (รูปแบบ `postgresql://USER:PASSWORD@HOST:PORT/DATABASE`)
+
+2. **ส่งให้เพื่อน**  
+   - ส่ง **External Database URL** ให้เพื่อนทางแชทส่วนตัว (อย่าโพสต์ที่สาธารณะ เพราะมีรหัสผ่าน)  
+   - เพื่อนตั้งในแอปของเขาเป็นตัวแปร **`DATABASE_URL`** = ค่าที่ส่งไป  
+   - โปรเจกต์ CHAMPA รองรับการเชื่อมต่อด้วย `DATABASE_URL` อยู่แล้ว (ใน `pyhon.py`)
+
+3. **ถ้าเพื่อนใช้ค่าประกอบเอง** (host, user, password แยก):  
+   ตั้ง environment ให้ครบ:  
+   `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` ตามที่ Render แสดงในส่วน Connections (External)
+
+4. **ความปลอดภัย**  
+   - ใครมี URL นี้จะอ่าน/เขียน DB ได้เท่ากับแอดมิน — ควรส่งเฉพาะคนที่เชื่อใจ  
+   - ถ้าไม่ใช้แล้ว: บน Render เปลี่ยนรหัสผ่าน PostgreSQL ได้ (จะได้ connection string ใหม่)
+
 ### 5. Deploy
 - กด **Create Web Service**
 - Render จะ build และ deploy ให้
 - เมื่อเสร็จจะได้ URL เช่น `https://champa-brand.onrender.com`
+
+### 5.1 ป้องกันเว็บ Sleep (ให้เข้าได้ 24 ชั่วโมง)
+Render **Free tier** จะ sleep หลัง 15 นาทีไม่มีการใช้งาน — ครั้งแรกที่เข้าใหม่จะใช้เวลาโหลด 30-60 วินาที
+
+**วิธีป้องกัน (เลือก 1 วิธี):**
+
+**วิธีที่ 1: ใช้ Keep-Alive Service (แนะนำ - ฟรี)**
+- ไปที่ https://cron-job.org หรือ https://uptimerobot.com (ฟรี)
+- สร้าง cron job / monitor ใหม่:
+  - **URL**: `https://YOUR-APP-URL.onrender.com/ping`
+  - **Interval**: ทุก **5-10 นาที** (เช่น 5 นาที)
+  - **Method**: GET
+- Service จะเรียก `/ping` อัตโนมัติ → เว็บจะไม่ sleep
+
+**วิธีที่ 2: อัปเกรดเป็น Paid Tier**
+- บน Render → Web Service → **Settings** → **Change Plan**
+- เลือก **Starter ($7/เดือน)** → เว็บจะไม่ sleep (always on)
+
+**หมายเหตุ:** Endpoint `/ping` และ `/health` มีอยู่แล้วในโค้ด — เรียกได้เลย (คืนค่า `{"status": "ok"}`)
 
 ---
 

@@ -27,8 +27,21 @@
   }
   function handleLogoutClick(e) {
     e.preventDefault();
-    localStorage.removeItem("champa_token");
-    window.location.href = "/brand/";
+    var token = localStorage.getItem("champa_token");
+    if (token) {
+      fetch((window.location.origin || "") + "/api/logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token }
+      }).then(function () {
+        localStorage.removeItem("champa_token");
+        window.location.href = "/brand/";
+      }).catch(function () {
+        localStorage.removeItem("champa_token");
+        window.location.href = "/brand/";
+      });
+    } else {
+      window.location.href = "/brand/";
+    }
   }
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", applyLogoutLink);
@@ -189,8 +202,10 @@ function typeLabel(type) {
   return map[type] || "ເສື້ອກິລາ";
 }
 
-// Category for products page filter: all | company | agency | event | sport | jersey
+// Category for products page filter: all | komon | kovi | ko5lien | kopo
+// ใช้ category จาก product โดยตรง (ไม่ต้อง map จาก type)
 function getProductCategory(type) {
+  // สำหรับสินค้าเก่าที่ยังใช้ type แทน category
   const map = {
     football: "jersey",
     running: "event",
@@ -207,7 +222,7 @@ function renderProducts(list) {
   if (!grid) return;
   grid.innerHTML = "";
   const isWorkGrid = grid.classList.contains("products-grid-work");
-  const contactHtml = '<span>📞 020-12345678</span><a href="https://facebook.com" target="_blank" rel="noopener">FB</a><a href="https://instagram.com" target="_blank" rel="noopener">IG</a>';
+  // const contactHtml = '<span>📞 020-12345678</span><a href="https://facebook.com" target="_blank" rel="noopener">FB</a><a href="https://instagram.com" target="_blank" rel="noopener">IG</a>';
 
   // หน้าสินค้า: แสดง 10 รายการก่อน ถ้ามากกว่านั้นมีปุ่มดูเพิ่ม
   var showAll = grid.hasAttribute("data-show-all");
@@ -288,7 +303,12 @@ function applyFilter() {
   if (grid) grid.removeAttribute("data-show-all");
   const list = f === "all"
     ? getAllProducts()
-    : getAllProducts().filter((p) => getProductCategory(p.type) === f);
+    : getAllProducts().filter((p) => {
+        // ใช้ category จาก product โดยตรง (komon, kovi, ko5lien, kopo)
+        // ถ้าไม่มี category ให้ fallback ไปใช้ getProductCategory(p.type) สำหรับสินค้าเก่า
+        const category = p.category || getProductCategory(p.type);
+        return category === f;
+      });
   renderProducts(list);
 }
 
@@ -306,6 +326,31 @@ productsTabs.forEach((tab) => {
     applyFilter();
   });
 });
+
+// ===== หน้ารายการสินค้า: ช่องค้นหา + เลือกประเภทคอ =====
+(function setupProductsSearch() {
+  var searchBtn = document.getElementById("productsSearchBtn");
+  var searchInput = document.getElementById("productsSearchInput");
+  var collarSelect = document.getElementById("productsCollarSelect");
+  if (!searchBtn || !searchInput) return;
+
+  function doSearch() {
+    var searchTerm = searchInput.value.trim();
+    var collarType = collarSelect ? collarSelect.value : "";
+    var evt = new CustomEvent("productsSearch", { detail: { search: searchTerm, collar: collarType } });
+    document.dispatchEvent(evt);
+  }
+
+  searchBtn.addEventListener("click", doSearch);
+  if (searchInput) {
+    searchInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        searchBtn.click();
+      }
+    });
+  }
+})();
 
 // เปิดแท็บตาม ?filter= จากลิงก์ (เช่น index หมวดหมู่ → products.html?filter=jersey)
 var hash = window.location.search;

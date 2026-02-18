@@ -53,14 +53,32 @@
         <span class="products-label">ຜົນງານ</span>
         <h1 class="products-title">ອອກແບບເສື້ອ</h1>
       </header>
+      <div class="products-search-wrap">
+        <input
+          type="search"
+          id="productsSearchInput"
+          class="products-search-input"
+          placeholder="ຄົ້ນຫາຊື່ສິນຄ້າ..."
+          autocomplete="off"
+          aria-label="ຄົ້ນຫາຊື່"
+        />
+        <select id="productsCollarSelect" class="products-collar-select">
+          <option value="">ທັງໝົດ</option>
+          <option value="ຄໍມົນ">ຄໍມົນ</option>
+          <option value="ຄໍວີ-ວີໄຂວ">ຄໍວີ-ວີໄຂວ</option>
+          <option value="ຄໍ5ລ່ຽນ">ຄໍ5ລ່ຽນ</option>
+          <option value="ຄໍໂປໂລ">ຄໍໂປໂລ</option>
+        </select>
+        <button type="button" class="products-search-btn" id="productsSearchBtn">ຄົ້ນຫາ</button>
+      </div>
 
       <nav class="products-categories" id="productsCategories">
         <button type="button" class="products-tab active" data-filter="all">ທັງໝົດ</button>
-        <button type="button" class="products-tab" data-filter="company">ເສື້ອບໍລິສັດ/ອົງກອນ</button>
-        <button type="button" class="products-tab" data-filter="agency">ເສື້ອໜ່ວຍງານ/ໂຮງຮຽນ/ມະຫາວິທະຍາໄລ</button>
-        <button type="button" class="products-tab" data-filter="event">ເສື້ອກິດຈະກຳ</button>
-        <button type="button" class="products-tab" data-filter="sport">ເສື້ອກິລາ</button>
-        <button type="button" class="products-tab" data-filter="jersey">JERSEY</button>
+        <button type="button" class="products-tab" data-filter="company">ເສື້ອບານເຕະ</button>
+        <button type="button" class="products-tab" data-filter="agency">ເສື້ອຕີບານ</button>
+        <button type="button" class="products-tab" data-filter="event">ເສື້ອແລ່ນ</button>
+        <button type="button" class="products-tab" data-filter="sport">ເສື້ອ E-Sport</button>
+        <button type="button" class="products-tab" data-filter="jersey">ເສື້ອ ທີມງານ</button>
       </nav>
 
       <div class="add-product-wrap" id="addProductWrap" hidden>
@@ -171,7 +189,7 @@
     </div>
   </footer>
 
-  <a class="sticky-consult" href="contact.html" aria-label="ປຶກສາຟຣີ" style="color:#3105b7 !important;">ປຶກສາຟຣີ</a>
+  <a class="sticky-consult" href="contact.html" aria-label="ປຶກສາຟຣີ">ປຶກສາຟຣີ</a>
 
   <script src="script.js"></script>
 </body>

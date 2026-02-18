@@ -19,6 +19,7 @@ from pyhon import (
     update_review_rating_by_customer,
     delete_review,
     login,
+    logout as logout_session,
     get_current_user,
     get_dashboard_overview,
     list_products,
@@ -267,6 +268,13 @@ def admin_login_redirect():
     return redirect("/login?next=/dashboard")
 
 
+@app.get("/ping")
+@app.get("/health")
+def health_check():
+    """Keep-alive endpoint เพื่อป้องกัน Render free tier sleep (เรียกทุก 5-10 นาที)"""
+    return jsonify({"status": "ok", "message": "Server is alive"}), 200
+
+
 @app.get("/setup")
 def setup_page():
     """หน้าสร้างแอดมินคนแรก — แสดงเฉพาะเมื่อยังไม่มีแอดมินในระบบ"""
@@ -343,6 +351,19 @@ def api_login():
         )
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
+
+@app.post("/api/logout")
+def api_logout():
+    """ออกจากระบบ — ลบ session เฉพาะเมื่อผู้ใช้กดปุ่มออกจากระบบ"""
+    token = _get_token_from_request()
+    if not token:
+        return jsonify({"ok": True}), 200
+    try:
+        logout_session(token)
+    except Exception:
+        pass
+    return jsonify({"ok": True}), 200
 
 
 # ========== Setup: สร้างแอดมินคนแรก (ใช้กับ ApiDog / Postman ได้ ไม่ต้องส่ง token) ==========
