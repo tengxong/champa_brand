@@ -81,60 +81,7 @@
         <button type="button" class="products-tab" data-filter="jersey">ເສື້ອ ທີມງານ</button>
       </nav>
 
-      <div class="add-product-wrap" id="addProductWrap" hidden>
-        <div class="card add-product-card">
-          <div class="card-title">ເພີ່ມສິນຄ້າໃໝ່</div>
-          <form class="form" id="addProductForm">
-            <div class="add-product-grid">
-              <div class="field">
-                <label>ຊື່ສິນຄ້າ</label>
-                <input type="text" id="addTitle" placeholder="ເຊັ່ນ Jersey Pro Blue" required />
-              </div>
-              <div class="field">
-                <label>ລາຄາ</label>
-                <input type="text" id="addPrice" placeholder="ເຊັ່ນ LAK 199.000" required />
-              </div>
-              <div class="field">
-                <label>ປະເພດ</label>
-                <select id="addType">
-                  <option value="football">ເສື້ອບານເຕະ (JERSEY)</option>
-                  <option value="running">ເສື້ອກິດຈະກຳ</option>
-                  <option value="basketball">ເສື້ອບາສ</option>
-                  <option value="esport">ເສື້ອ eSport</option>
-                </select>
-              </div>
-              <div class="field">
-                <label>ແບນຈ໌</label>
-                <input type="text" id="addBadge" placeholder="ເຊັ່ນ ຂາຍດີ, ມາໃໝ່" />
-              </div>
-            </div>
-            <div class="field">
-              <label>ລາຍລະອຽດ</label>
-              <textarea id="addDesc" rows="2" placeholder="ອະທິບາຍສິນຄ້າ"></textarea>
-            </div>
-            <div class="field">
-              <label>ຮູບສິນຄ້າ</label>
-              <div class="add-image-box" id="addProductImageBox">
-                <input type="file" id="addProductImage" accept="image/*" hidden />
-                <div class="add-image-box-placeholder" id="addProductImagePlaceholder">+ ເພີ່ມຮູບ</div>
-                <div class="add-image-box-preview" id="addProductImagePreview" hidden></div>
-              </div>
-              <p class="small muted add-image-hint">ຮູບທີ່ເລືອກຈະແມ່ນໃນໜ້າສິນຄ້າ ແລະໜ້າລາຍລະອຽດ</p>
-            </div>
-            <div class="add-product-actions">
-              <button type="submit" class="btn primary">ເພີ່ມສິນຄ້າ</button>
-              <button type="button" class="btn ghost" id="btnCancelAddProduct">ຍົກເລີກ</button>
-            </div>
-            <div class="small muted" id="addProductResult"></div>
-          </form>
-        </div>
-      </div>
-
       <div class="products-grid products-grid-work" id="productGrid"></div>
-
-      <p class="products-add-hint">
-        <button type="button" class="btn ghost btn-add-product" id="btnToggleAddProduct">+ ເພີ່ມສິນຄ້າ</button>
-      </p>
     </div>
   </main>
 
@@ -151,27 +98,21 @@
       <div class="modal-body">
         <div class="modal-preview" id="mPreview"></div>
         <div class="modal-info">
-          <div class="price" id="mPrice">-</div>
           <div class="muted" id="mDesc">-</div>
           <div class="mini-grid">
             <div class="mini-card">
-              <div class="small muted">ປະເພດ</div>
+              <div class="small muted">ປະເພດສິນຄ້າ</div>
               <div class="strong" id="mType">-</div>
             </div>
             <div class="mini-card">
-              <div class="small muted">ງານພິມ</div>
-              <div class="strong">HD Print</div>
-            </div>
-            <div class="mini-card">
-              <div class="small muted">ເໝາະກັບ</div>
-              <div class="strong">ທີມ/ແຂ່ງ</div>
+              <div class="small muted">ປະເພດຄໍ</div>
+              <div class="strong" id="mCollar">-</div>
             </div>
           </div>
           <div class="modal-actions">
             <a class="btn primary" href="contact.html">ທັກສັ່ງເຮັດ</a>
             <button class="btn ghost" id="copyText">ຄັດລອກຊື່ສິນຄ້າ</button>
           </div>
-          <div class="small muted">* ລາຄາເປັນລາຄາຕົວຢ່າງ ສາມາດປັບຕາມຈຳນວນ/ແບບ/ຊື່-ເບີ/ສະປອນເຊີ</div>
         </div>
       </div>
     </div>

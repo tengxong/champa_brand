@@ -751,13 +751,15 @@ def create_product(
 
     with get_connection() as conn:
         with conn.cursor() as cur:
+            # stock: ถ้า DB กำหนด NOT NULL ให้ใช้ 0 แทน None
+            stock_val = stock if stock is not None else 0
             cur.execute(
                 """
                 INSERT INTO products (name, price, stock, image, description, category, price_type, created_at)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, TO_TIMESTAMP(%s))
                 RETURNING id
                 """,
-                (name, price, stock if stock is not None else None, None, desc, category, price_type, created_at),
+                (name, price, stock_val, None, desc, category, price_type, created_at),
             )
             product_id = cur.fetchone()[0]
 
@@ -765,7 +767,7 @@ def create_product(
         id=product_id,
         name=name,
         price=price,
-        stock=stock,
+        stock=stock_val,
         image=None,
         description=desc,
         category=category,

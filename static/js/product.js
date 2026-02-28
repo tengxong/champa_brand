@@ -4,6 +4,7 @@ const ProductPage = {
   filteredProducts: [],
   searchTerm: '',
   filterCategory: 'all',
+  filterCollar: 'all',
   filterStatus: 'all',
   currentPage: 1,
   itemsPerPage: 10,
@@ -11,10 +12,9 @@ const ProductPage = {
   async load() {
     try {
       const list = await API.get('/api/admin/products');
-      // Add mock category and sales for each product
       this.allProducts = list.map(p => ({
         ...p,
-        category: this.getCategory(p.id),
+        category: p.category != null && p.category !== '' ? p.category : this.getCategory(p.id),
         sales: Math.floor(Math.random() * 500) + 100
       }));
       this.applyFilters();
@@ -23,7 +23,7 @@ const ProductPage = {
       this.updatePagination();
     } catch (error) {
       document.getElementById('product-tbody').innerHTML = 
-        `<tr><td colspan="8" class="px-6 py-4 text-center text-red-500">${error.message}</td></tr>`;
+        `<tr><td colspan="5" class="px-6 py-4 text-center text-red-500">${error.message}</td></tr>`;
     }
   },
 
@@ -34,20 +34,12 @@ const ProductPage = {
 
   getPackageTypeLabel(type) {
     const labels = {
-      'ແພດາວກະຈາຍ': 'ແພດາວກະຈາຍ',
-      'ແພໄມໂຄ': 'ແພໄມໂຄ',
-      'ແພຮັງເຜິ້ງ': 'ແພຮັງເຜິ້ງ',
-      'ແພຕາຕາລາງ': 'ແພຕາຕາລາງ',
-      'ແພລາຍຂວາງ': 'ແພລາຍຂວາງ',
-      'ແພ6ຫຼ່ຽມ': 'ແພ6ຫຼ່ຽມ',
-      'ແພສາຍຝົນ': 'ແພສາຍຝົນ',
-      'ແພສີ່ຫຼ່ຽມ': 'ແພສີ່ຫຼ່ຽມ',
-      'ແພນັບເບີລ': 'ແພນັບເບີລ',
-      'ແພສາມເສັ້ນເຫຼື້ອມ': 'ແພສາມເສັ້ນເຫຼື້ອມ',
-      'ແພເສັ້ນຊື່': 'ແພເສັ້ນຊື່',
-      'ແພDigital': 'ແພDigital',
-      'ແພຄື້ນທະເລ': 'ແພຄື້ນທະເລ',
-      'custom': 'ກຳນດເອງ'
+      'company': 'ເສື້ອບານເຕະ',
+      'football': 'ເສື້ອບານເຕະ',
+      'agency': 'ເສື້ອຕີບານ',
+      'event': 'ເສື້ອແລ່ນ',
+      'sport': 'ເສື້ອ E-Sport',
+      'jersey': 'ເສື້ອ ທີມງານ'
     };
     return labels[type] || type || '-';
   },
@@ -59,13 +51,17 @@ const ProductPage = {
 
   applyFilters() {
     this.filteredProducts = this.allProducts.filter(product => {
-      const matchesSearch = !this.searchTerm || 
-        product.name.toLowerCase().includes(this.searchTerm.toLowerCase());
-      const matchesCategory = this.filterCategory === 'all' || 
-        product.category.toLowerCase() === this.filterCategory.toLowerCase();
-      
-      // ไม่ต้อง filter ตาม status แล้ว เพราะไม่มี stock
-      return matchesSearch && matchesCategory;
+      const search = (this.searchTerm || '').trim().toLowerCase();
+      const matchesSearch = !search ||
+        (product.name && product.name.toLowerCase().includes(search)) ||
+        (product.description && product.description.toLowerCase().includes(search));
+      const cat = (product.category || '').toString().toLowerCase();
+      const matchesCategory = this.filterCategory === 'all' ||
+        cat === (this.filterCategory || '').toLowerCase();
+      const collar = (product.price_type || '').trim();
+      const matchesCollar = this.filterCollar === 'all' ||
+        collar === this.filterCollar;
+      return matchesSearch && matchesCategory && matchesCollar;
     });
   },
 
@@ -80,7 +76,7 @@ const ProductPage = {
     const products = this.getPaginatedProducts();
     
     if (products.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-gray-500">ไม่มีข้อมูล</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">ไม่มีข้อมูล</td></tr>';
       return;
     }
 
@@ -104,6 +100,8 @@ const ProductPage = {
             </svg>
           </div>`;
       const descShort = truncate(product.description || '', 40);
+      const categoryLabel = this.getPackageTypeLabel(product.category || '');
+      const collarLabel = (product.price_type || '').trim() || '-';
       return `
         <tr class="hover:bg-gray-50">
           <td class="px-6 py-4 whitespace-nowrap">
@@ -112,10 +110,8 @@ const ProductPage = {
               <div class="text-sm font-medium text-gray-900">${product.name}</div>
             </div>
           </td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${product.category || '-'}</td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${this.getPackageTypeLabel(product.price_type || product.package_type || '-')}</td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">LAK ${parseFloat(product.price).toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}</td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${product.sales}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${categoryLabel}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${collarLabel}</td>
           <td class="px-6 py-4 text-sm text-gray-600 max-w-xs" title="${(product.description || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')}">${descShort}</td>
           <td class="px-6 py-4 whitespace-nowrap text-sm">
             <div class="flex items-center space-x-2">
@@ -178,8 +174,7 @@ const ProductPage = {
     const modal = document.getElementById('view-modal');
     if (!modal) return;
     document.getElementById('view-product-name').textContent = product.name;
-    document.getElementById('view-product-price').textContent = `LAK ${parseFloat(product.price).toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}`;
-    // ไม่แสดง stock แล้ว
+    // ไม่แสดงราคาใน modal การดู
     const stockEl = document.getElementById('view-product-stock');
     if (stockEl) {
       stockEl.parentElement.style.display = 'none';
@@ -206,17 +201,17 @@ const ProductPage = {
     const name = document.getElementById('add-name').value.trim();
     const description = document.getElementById('add-description').value.trim() || null;
     const category = document.getElementById('add-category').value;
-    const priceType = document.getElementById('add-price-type').value;
-    const price = parseFloat(document.getElementById('add-price').value);
+    const addPriceTypeEl = document.getElementById('add-price-type');
+    const priceType = addPriceTypeEl ? (addPriceTypeEl.value || null) : null;
     const imageFile = document.getElementById('add-product-image-input').files[0];
 
-    if (!name || !priceType || isNaN(price) || price < 0) {
-      Notification.warning('กรุณาเลือกประเภทแพ็กเกจและกรอกราคาให้ถูกต้อง');
+    if (!name) {
+      Notification.warning('กรุณากรอกชื่อสินค้า');
       return;
     }
 
     try {
-      const product = await API.post('/api/admin/products', { name, price, stock: null, description, category: category || null, price_type: priceType || null });
+      const product = await API.post('/api/admin/products', { name, price: 0, stock: null, description, category: category || null, price_type: priceType });
       
       // ถ้ามีรูปให้อัปโหลด
       if (imageFile) {
@@ -314,8 +309,8 @@ const ProductPage = {
     document.getElementById('add-modal').classList.add('hidden');
     document.getElementById('add-name').value = '';
     document.getElementById('add-category').value = '';
-    document.getElementById('add-price-type').value = '';
-    document.getElementById('add-price').value = '';
+    const addPriceType = document.getElementById('add-price-type');
+    if (addPriceType) addPriceType.value = '';
     document.getElementById('add-product-image-input').value = '';
     document.getElementById('add-product-image-preview').src = '';
     document.getElementById('add-product-image-preview').classList.add('hidden');
@@ -333,9 +328,12 @@ const ProductPage = {
     document.getElementById('edit-product-id').value = id;
     document.getElementById('edit-product-name').value = product.name;
     document.getElementById('edit-product-description').value = product.description || '';
-    document.getElementById('edit-product-category').value = product.category || '';
-    document.getElementById('edit-product-price-type').value = product.price_type || 'custom';
-    document.getElementById('edit-product-price').value = product.price;
+    const editCategoryEl = document.getElementById('edit-product-category');
+    if (editCategoryEl) editCategoryEl.value = product.category || '';
+    const editPriceType = document.getElementById('edit-product-price-type');
+    const editPrice = document.getElementById('edit-product-price');
+    if (editPriceType) editPriceType.value = product.price_type || 'custom';
+    if (editPrice) editPrice.value = product.price;
 
     // แสดงรูปสินค้าใน edit modal
     const editImagePreview = document.getElementById('edit-product-image-preview');
@@ -395,14 +393,22 @@ const ProductPage = {
 
   async saveEdit() {
     const id = parseInt(document.getElementById('edit-product-id').value);
+    const product = this.allProducts.find(p => p.id === id);
     const name = document.getElementById('edit-product-name').value.trim();
     const description = document.getElementById('edit-product-description').value.trim() || null;
-    const category = document.getElementById('edit-product-category').value || null;
-    const priceType = document.getElementById('edit-product-price-type').value || null;
-    const price = parseFloat(document.getElementById('edit-product-price').value);
+    const editCategoryEl = document.getElementById('edit-product-category');
+    const category = editCategoryEl ? (editCategoryEl.value || null) : (product ? product.category : null);
+    const editPriceEl = document.getElementById('edit-product-price');
+    const editPriceTypeEl = document.getElementById('edit-product-price-type');
+    const price = editPriceEl ? parseFloat(editPriceEl.value) : (product ? product.price : 0);
+    const priceType = editPriceTypeEl ? (editPriceTypeEl.value || null) : (product ? product.price_type : null);
 
-    if (!name || isNaN(price) || price < 0) {
-      Notification.warning('กรุณากรอกข้อมูลให้ถูกต้อง');
+    if (!name) {
+      Notification.warning('กรุณากรอกชื่อสินค้า');
+      return;
+    }
+    if (editPriceEl && (isNaN(price) || price < 0)) {
+      Notification.warning('กรุณากรอกราคาให้ถูกต้อง');
       return;
     }
 
@@ -465,6 +471,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (filterCategory) {
       filterCategory.addEventListener('change', (e) => {
         ProductPage.filterCategory = e.target.value;
+        ProductPage.currentPage = 1;
+        ProductPage.applyFilters();
+        ProductPage.render();
+        ProductPage.updatePagination();
+      });
+    }
+
+    const filterCollar = document.getElementById('filter-collar');
+    if (filterCollar) {
+      filterCollar.addEventListener('change', (e) => {
+        ProductPage.filterCollar = e.target.value;
         ProductPage.currentPage = 1;
         ProductPage.applyFilters();
         ProductPage.render();

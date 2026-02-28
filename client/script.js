@@ -202,10 +202,8 @@ function typeLabel(type) {
   return map[type] || "ເສື້ອກິລາ";
 }
 
-// Category for products page filter: all | komon | kovi | ko5lien | kopo
-// ใช้ category จาก product โดยตรง (ไม่ต้อง map จาก type)
+// Category for products page filter: all | company | agency | event | sport | jersey
 function getProductCategory(type) {
-  // สำหรับสินค้าเก่าที่ยังใช้ type แทน category
   const map = {
     football: "jersey",
     running: "event",
@@ -215,6 +213,18 @@ function getProductCategory(type) {
   return map[type] || "sport";
 }
 
+// แปลง category เป็นข้อความแสดง (ตามที่เลือกตอนเพิ่ม)
+function getCategoryLabel(category) {
+  const map = {
+    company: "ເສື້ອບານເຕະ",
+    agency: "ເສື້ອຕີບານ",
+    event: "ເສື້ອແລ່ນ",
+    sport: "ເສື້ອ E-Sport",
+    jersey: "ເສື້ອ ທີມງານ"
+  };
+  return map[category] || category || "";
+}
+
 // ===== Render Products ===== (work-style cards on products page)
 var PRODUCTS_INITIAL = 10; // แสดง 10 รายการก่อน แล้วค่อยดูเพิ่ม
 
@@ -222,7 +232,7 @@ function renderProducts(list) {
   if (!grid) return;
   grid.innerHTML = "";
   const isWorkGrid = grid.classList.contains("products-grid-work");
-  // const contactHtml = '<span>📞 020-12345678</span><a href="https://facebook.com" target="_blank" rel="noopener">FB</a><a href="https://instagram.com" target="_blank" rel="noopener">IG</a>';
+  const contactHtml = '';
 
   // หน้าสินค้า: แสดง 10 รายการก่อน ถ้ามากกว่านั้นมีปุ่มดูเพิ่ม
   var showAll = grid.hasAttribute("data-show-all");
@@ -237,6 +247,9 @@ function renderProducts(list) {
       const imgSrc = p.image || "";
       const imgTag = imgSrc ? `<img src="${imgSrc}" alt="${p.title}" onerror="this.style.display='none'" />` : "";
       const freeTag = (p.badge && (p.badge === "FREE" || p.badge === "ຟຣີ")) ? '<span class="product-card-free">FREE</span>' : "";
+      const categoryLabel = getCategoryLabel(p.category || getProductCategory(p.type));
+      const collarLabel = p.price_type || "";
+      const descShort = (p.desc || "").length > 60 ? (p.desc || "").slice(0, 60) + "…" : (p.desc || "");
       card.className = "product-card-work";
       card.innerHTML = `
         <div class="product-card-images">
@@ -244,10 +257,11 @@ function renderProducts(list) {
         </div>
         <div class="product-card-body">
           <div class="product-card-brand">${p.title}</div>
-          <div class="product-card-contact">${contactHtml}</div>
+          ${categoryLabel ? '<div class="product-card-category muted">' + categoryLabel + '</div>' : ''}
+          ${collarLabel ? '<div class="product-card-collar muted">' + collarLabel + '</div>' : ''}
+          ${descShort ? '<div class="product-card-desc muted">' + descShort + '</div>' : ''}
         </div>
         <div class="product-card-actions">
-          <div class="price">${p.price}</div>
           <button type="button" class="btn small primary" data-buy="${p.id}">ສັ່ງຊື້</button>
         </div>
       `;
@@ -256,12 +270,12 @@ function renderProducts(list) {
       const thumbContent = p.image
         ? `<img src="${p.image}" alt="${p.title}" class="thumb-img" onerror="this.style.display='none'" /><div class="badge">${p.badge || ""}</div>`
         : `<div class="badge">${p.badge || ""}</div>`;
+      const categoryLabel = getCategoryLabel(p.category || getProductCategory(p.type));
       card.innerHTML = `
         <div class="thumb">${thumbContent}</div>
         <div class="product-title">${p.title}</div>
-        <div class="muted">${typeLabel(p.type)}</div>
+        <div class="muted">${categoryLabel || typeLabel(p.type)}</div>
         <div class="product-actions">
-          <div class="price">${p.price}</div>
           <button class="btn small primary" data-buy="${p.id}">ສັ່ງຊື້</button>
         </div>
       `;
@@ -327,29 +341,61 @@ productsTabs.forEach((tab) => {
   });
 });
 
-// ===== หน้ารายการสินค้า: ช่องค้นหา + เลือกประเภทคอ =====
+// ===== หน้ารายการสินค้า: ช่องค้นหา + เลือกประเภทคอ (ຄໍມົນ, ຄໍວີ-ວີໄຂວ, ຄໍ5ລ່ຽນ, ຄໍໂປໂລ) =====
 (function setupProductsSearch() {
   var searchBtn = document.getElementById("productsSearchBtn");
   var searchInput = document.getElementById("productsSearchInput");
   var collarSelect = document.getElementById("productsCollarSelect");
+  var productsTabsList = document.querySelectorAll(".products-tab");
   if (!searchBtn || !searchInput) return;
 
   function doSearch() {
-    var searchTerm = searchInput.value.trim();
+    var searchTerm = searchInput.value.trim().toLowerCase();
     var collarType = collarSelect ? collarSelect.value : "";
-    var evt = new CustomEvent("productsSearch", { detail: { search: searchTerm, collar: collarType } });
-    document.dispatchEvent(evt);
+    var list = getAllProducts();
+    if (searchTerm) {
+      list = list.filter(function (p) {
+        var title = (p.title || "").toLowerCase();
+        return title.indexOf(searchTerm) !== -1;
+      });
+    }
+    if (collarType) {
+      list = list.filter(function (p) {
+        var collar = (p.price_type || "").trim();
+        return collar === collarType;
+      });
+    }
+    if (typeof renderProducts === "function") renderProducts(list);
+    if (grid) grid.removeAttribute("data-show-all");
+    var tabToActivate = null;
+    if (productsTabsList.length) {
+      for (var i = 0; i < productsTabsList.length; i++) {
+        if (productsTabsList[i].dataset.filter === (collarType || "all")) {
+          tabToActivate = productsTabsList[i];
+          break;
+        }
+      }
+      if (!tabToActivate && !collarType) tabToActivate = document.querySelector('.products-tab[data-filter="all"]');
+      if (tabToActivate) {
+        for (var j = 0; j < productsTabsList.length; j++) productsTabsList[j].classList.remove("active");
+        tabToActivate.classList.add("active");
+      }
+    }
   }
 
   searchBtn.addEventListener("click", doSearch);
-  if (searchInput) {
-    searchInput.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        searchBtn.click();
-      }
-    });
-  }
+  searchInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      searchBtn.click();
+    }
+  });
+  document.addEventListener("productsSearch", function (e) {
+    var d = e.detail || {};
+    if (d.search !== undefined && searchInput) searchInput.value = d.search || "";
+    if (d.collar !== undefined && collarSelect) collarSelect.value = d.collar || "";
+    doSearch();
+  });
 })();
 
 // เปิดแท็บตาม ?filter= จากลิงก์ (เช่น index หมวดหมู่ → products.html?filter=jersey)
@@ -375,11 +421,11 @@ if (filterMatch && productsTabs.length) {
         return {
           id: p.id,
           title: p.name,
-          price: "LAK " + Number(p.price).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 }),
           type: "football",
           badge: p.stock > 0 ? "ມີສິນຄ້າ" : "ໝົດ",
           desc: p.description || "",
           category: p.category || "",
+          price_type: p.price_type || "",
           image: imgUrl
         };
       });
@@ -501,15 +547,14 @@ const closeModalBtn = document.getElementById("closeModal");
 const modalBackdrop = document.getElementById("modalBackdrop");
 
 const mTitle = document.getElementById("mTitle");
-const mPrice = document.getElementById("mPrice");
 const mDesc = document.getElementById("mDesc");
 const mType = document.getElementById("mType");
+const mCollar = document.getElementById("mCollar");
 const mPreview = document.getElementById("mPreview");
 const copyTextBtn = document.getElementById("copyText");
 
 function openModal(id) {
   if (!modal) return;
-  // ຕ້ອງເຂົ້າສູ່ລະບົບກ່ອນຈຶ່ງດູສິນຄ້າ
   var token = localStorage.getItem("champa_token");
   if (!token) {
     var next = encodeURIComponent(window.location.pathname + window.location.search || "/brand/products.html");
@@ -520,9 +565,9 @@ function openModal(id) {
   if (!p) return;
 
   if (mTitle) mTitle.textContent = p.title;
-  if (mPrice) mPrice.textContent = p.price;
   if (mDesc) mDesc.textContent = p.desc || "";
-  if (mType) mType.textContent = typeLabel(p.type);
+  if (mType) mType.textContent = getCategoryLabel(p.category || getProductCategory(p.type)) || "-";
+  if (mCollar) mCollar.textContent = p.price_type || "-";
 
   if (mPreview) {
     if (p.image) {
@@ -640,6 +685,7 @@ if (addProductForm) {
     const title = document.getElementById("addTitle").value.trim();
     const price = document.getElementById("addPrice").value.trim();
     const type = document.getElementById("addType").value;
+    const category = type || "";
     const badge = document.getElementById("addBadge").value.trim() || "New";
     const desc = document.getElementById("addDesc").value.trim() || "-";
     if (!title || !price) return;
@@ -649,7 +695,8 @@ if (addProductForm) {
       id: maxId + 1,
       title,
       price,
-      type,
+      type: type || "football",
+      category: category,
       badge,
       desc,
       image: addProductImageData || undefined
