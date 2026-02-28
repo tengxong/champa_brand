@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>สร้างแอดมินคนแรก | CHAMPA BRAND</title>
+  <link rel="stylesheet" href="/brand/style.css" />
+  <style>
+    .auth-page { min-height: 100vh; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
+    .auth-box { width: 100%; max-width: 420px; background: #fff; border-radius: 16px; box-shadow: 0 8px 32px rgba(45, 48, 145, 0.12); overflow: hidden; border: 1px solid var(--line); }
+    .auth-header { background: #2d3091; color: #fff; padding: 24px; text-align: center; }
+    .auth-header h1 { margin: 0; font-size: 1.5rem; font-weight: 800; }
+    .auth-header p { margin: 8px 0 0; opacity: 0.9; font-size: 0.9rem; }
+    .auth-body { padding: 24px; }
+    .auth-form label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; color: var(--text); }
+    .auth-form input { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; font-size: 15px; font-family: inherit; margin-bottom: 16px; box-sizing: border-box; }
+    .auth-form input:focus { outline: none; border-color: #2d3091; box-shadow: 0 0 0 2px rgba(45, 48, 145, 0.2); }
+    .auth-form button[type="submit"] { width: 100%; padding: 14px; background: #2d3091; color: #fff; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; }
+    .auth-form button[type="submit"]:hover { background: #3d4199; }
+    .auth-form .hint { font-size: 12px; color: var(--muted); margin-top: -8px; margin-bottom: 12px; }
+    .auth-msg { padding: 10px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; display: none; }
+    .auth-msg.show { display: block; }
+    .auth-msg.error { background: #fee; color: #c00; }
+    .auth-msg.success { background: #efe; color: #060; }
+    .auth-back { display: block; margin-top: 16px; text-align: center; color: #2d3091; font-weight: 600; text-decoration: none; }
+    .auth-back:hover { text-decoration: underline; }
+    .password-wrapper { position: relative; margin-bottom: 16px; }
+    .password-wrapper input { padding-right: 45px; }
+    .password-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 4px; color: var(--muted); font-size: 18px; line-height: 1; }
+    .password-toggle:hover { color: #2d3091; }
+    .password-toggle:focus { outline: none; }
+  </style>
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-box">
+      <div class="auth-header">
+        <h1>CHAMPA BRAND</h1>
+        <p>สร้างแอดมินคนแรก</p>
+      </div>
+      <div class="auth-body">
+        <div id="auth-msg" class="auth-msg"></div>
+        <form id="form-setup" class="auth-form" method="post" action="#">
+          <label for="setup-username">Username</label>
+          <input type="text" id="setup-username" name="username" placeholder="ตั้งชื่อสำหรับเข้า Admin" required autocomplete="username" />
+          <label for="setup-password">รหัสผ่าน</label>
+          <div class="password-wrapper">
+            <input type="password" id="setup-password" name="password" placeholder="รหัสผ่านที่ต้องการ" required autocomplete="new-password" />
+            <button type="button" class="password-toggle" id="setup-password-toggle" aria-label="แสดง/ซ่อนรหัสผ่าน">👁️</button>
+          </div>
+          <label for="setup-phone">เบอร์โทร (ไม่บังคับ)</label>
+          <input type="tel" id="setup-phone" name="phone" placeholder="020xxxxxxxx" autocomplete="tel" />
+          <p class="hint">หลังสร้างแล้ว ใช้ username / รหัสผ่านนี้เข้าสู่ระบบที่หน้า Login</p>
+          <button type="submit">สร้างแอดมินคนแรก</button>
+        </form>
+        <a href="/login" class="auth-back">← กลับไปหน้าเข้าสู่ระบบ</a>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function() {
+      const form = document.getElementById("form-setup");
+      const msgEl = document.getElementById("auth-msg");
+      function showMsg(text, type) {
+        msgEl.textContent = text;
+        msgEl.className = "auth-msg show " + (type || "");
+      }
+      // Password toggle (แสดง/ซ่อนรหัสผ่าน)
+      const setupPassword = document.getElementById("setup-password");
+      const setupPasswordToggle = document.getElementById("setup-password-toggle");
+      if (setupPassword && setupPasswordToggle) {
+        setupPasswordToggle.addEventListener("click", function() {
+          if (setupPassword.type === "password") {
+            setupPassword.type = "text";
+            setupPasswordToggle.textContent = "🙈";
+          } else {
+            setupPassword.type = "password";
+            setupPasswordToggle.textContent = "👁️";
+          }
+        });
+      }
+      form.addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const username = document.getElementById("setup-username").value.trim();
+        const password = document.getElementById("setup-password").value;
+        const phone = document.getElementById("setup-phone").value.trim() || undefined;
+        if (!username || !password) {
+          showMsg("กรุณากรอก username และรหัสผ่าน", "error");
+          return;
+        }
+        showMsg("กำลังสร้างแอดมิน...", "");
+        try {
+          const res = await fetch("/api/setup/first-admin", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: username, password: password, phone: phone || null })
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            showMsg(data.error || "สร้างไม่สำเร็จ", "error");
+            return;
+          }
+          showMsg("สร้างแอดมินสำเร็จ กำลังพาไปหน้าเข้าสู่ระบบ...", "success");
+          setTimeout(function() {
+            window.location.href = "/login?next=/admin";
+          }, 1200);
+        } catch (err) {
+          showMsg("เกิดข้อผิดพลาด: " + err.message, "error");
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

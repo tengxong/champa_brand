@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 260">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#323696"/>
+      <stop offset="1" stop-color="#323995"/>
+    </linearGradient>
+    <radialGradient id="r" cx="25%" cy="30%" r="75%">
+      <stop offset="0" stop-color="rgba(255,255,255,0.22)"/>
+      <stop offset="1" stop-color="rgba(255,255,255,0)"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="260" rx="28" fill="url(#g)"/>
+  <rect x="18" y="18" width="1164" height="224" rx="22" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.18)"/>
+  <circle cx="300" cy="70" r="220" fill="url(#r)"/>
+  <path d="M0 190 C 220 130, 420 250, 640 190 S 1080 170, 1200 210 V260 H0 Z" fill="rgba(0,0,0,0.10)"/>
+
+  <g fill="white" font-family="PHETSARATH OT, system-ui, sans-serif">
+    <text x="64" y="120" font-size="44" font-weight="800">CHAMPA BRAND</text>
+    <text x="64" y="170" font-size="22" opacity="0.9">Custom sports jerseys - Made to order - Fast delivery</text>
+  </g>
+</svg>
