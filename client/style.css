@@ -6,15 +6,15 @@
   font-style: normal;
 }
 :root {
-  --orange: #de2c93;
-  --orange2: #e85aa8;
-  --orange-light: rgba(222, 44, 147, 0.12);
+  --orange: #2f3288;
+  --orange2: #4a4da8;
+  --orange-light: rgba(47, 50, 136, 0.12);
   --bg: #ffffff;
   --text: #1a1a1a;
   --muted: rgba(0, 0, 0, 0.65);
   --line: rgba(0, 0, 0, 0.1);
-  --blue: #de2c93;
-  --blue2: #e85aa8;
+  --blue: #2f3288;
+  --blue2: #4a4da8;
 }
 * { box-sizing: border-box; }
 html {
@@ -39,14 +39,14 @@ button, .btn, input, select, textarea {
 }
 .container { width: min(1100px, 92%); margin: 0 auto; padding: 0 12px; }
 
-/* ========== HEADER (Finix-style: white bg, orange logo, nav center, contact right) ========== */
+/* ========== HEADER (Champa: white bg, orange logo) ========== */
 .header {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: #000;
-  border-bottom: 1px solid rgba(222, 44, 147, 0.3);
-  box-shadow: 0 1px 3px rgba(0,0,0,.1);
+  background: #fff;
+  border-bottom: 1px solid rgba(47, 50, 136, 0.25);
+  box-shadow: 0 1px 3px rgba(0,0,0,.08);
 }
 .header-inner {
   display: flex;
@@ -55,14 +55,14 @@ button, .btn, input, select, textarea {
   padding: 12px 0;
   gap: 16px;
 }
-.header .logo { color: #de2c93; }
-.header .logo-main { color: #de2c93; }
-.header .logo-sub { color: rgba(222, 44, 147, 0.85); }
-.header .menu a { color: rgba(222, 44, 147, 0.9); }
-.header .menu a:hover { color: #de2c93; }
-.header .menu a.active { color: #de2c93; border-bottom-color: #de2c93; }
-.header .contact-item { color: #de2c93; }
-.header .contact-label { color: rgba(222, 44, 147, 0.8); }
+.header .logo { color: #2f3288; }
+.header .logo-main { color: #2f3288; }
+.header .logo-sub { color: rgba(47, 50, 136, 0.85); }
+.header .menu a { color: rgba(0, 0, 0, 0.75); }
+.header .menu a:hover { color: #2f3288; }
+.header .menu a.active { color: #2f3288; border-bottom-color: #2f3288; }
+.header .contact-item { color: #2f3288; }
+.header .contact-label { color: rgba(47, 50, 136, 0.8); }
 .logo {
   display: flex;
   flex-direction: row;
@@ -119,19 +119,19 @@ button, .btn, input, select, textarea {
   width: 100%;
   padding: 8px 12px 8px 32px;
   border-radius: 999px;
-  border: 1px solid rgba(222, 44, 147, 0.4);
-  background: rgba(255,255,255,.12);
-  color: #de2c93;
+  border: 1px solid rgba(47, 50, 136, 0.4);
+  background: rgba(0, 0, 0, 0.04);
+  color: #1a1a1a;
   font-size: 14px;
   font-family: inherit;
   outline: none;
   transition: background .2s, border-color .2s;
 }
-.site-search-input::placeholder { color: rgba(222, 44, 147, 0.7); }
-.site-search-input:hover { background: rgba(255,255,255,.18); }
+.site-search-input::placeholder { color: rgba(0, 0, 0, 0.5); }
+.site-search-input:hover { background: rgba(0, 0, 0, 0.06); }
 .site-search-input:focus {
-  background: rgba(255,255,255,.22);
-  border-color: rgba(222, 44, 147, 0.6);
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(47, 50, 136, 0.6);
 }
 .site-search-results {
   position: absolute;
@@ -154,7 +154,7 @@ button, .btn, input, select, textarea {
   border-bottom: 1px solid rgba(0,0,0,.06);
 }
 .site-search-results a:last-child { border-bottom: none; }
-.site-search-results a:hover { background: rgba(222,44,147,.08); }
+.site-search-results a:hover { background: rgba(47,50,136,.08); }
 .site-search-results .search-result-title { display: block; font-weight: 600; }
 .site-search-results .search-result-label {
   font-size: 11px;
@@ -190,13 +190,13 @@ button, .btn, input, select, textarea {
   font-size: 16px;
 }
 .header .contact-icon {
-  border: 2px solid #de2c93;
+  border: 2px solid #2f3288;
 }
 .contact-icon svg { display: block; }
 .contact-icon-wa { background: #25D366; color: #fff; }
 .contact-icon-fb { background: #1877F2; color: #fff; }
 .contact-icon-tt { background: #000; color: #fff; }
-  .contact-icon-call { background: #de2c93; color: #fff; }
+  .contact-icon-call { background: #2f3288; color: #fff; }
   .contact-label { font-size: 11px; color: var(--muted); }
 
 /* ลูกศรลง (chevron) เล็ก ๆ ข้างขวาของปุ่ม WhatsApp บน header */
@@ -212,7 +212,7 @@ button, .btn, input, select, textarea {
   margin-top: -2px;
   border-width: 4px 4px 0 4px;
   border-style: solid;
-  border-color: #de2c93 transparent transparent transparent;
+  border-color: #2f3288 transparent transparent transparent;
 }
 
 /* Dropdown เลือกเบอร์ WhatsApp ใต้ปุ่ม header */
@@ -221,11 +221,11 @@ button, .btn, input, select, textarea {
   top: 100%;
   right: 0;
   margin-top: 8px;
-  background: #de2c93;
+  background: #2f3288;
   border-radius: 12px;
   padding: 6px 0;
   min-width: 220px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.6);
+  box-shadow: 0 10px 30px rgba(0,0,0,.15);
   display: none;
   z-index: 999;
 }
@@ -247,7 +247,7 @@ button, .btn, input, select, textarea {
 .hamburger {
   display: none;
   background: transparent;
-  border: 2px solid #de2c93;
+  border: 2px solid #2f3288;
   color: var(--text);
   padding: 8px 12px;
   border-radius: 10px;
@@ -262,8 +262,8 @@ button, .btn, input, select, textarea {
 .nav .logo-img { height: 36px; width: auto; display: block; }
 .nav .logo-text { font-size: 20px; font-weight: 900; color: var(--orange); }
 .nav-contact { display: flex; gap: 12px; align-items: center; }
-.nav-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; text-decoration: none; background: rgba(222,44,147,.12); color: var(--orange); }
-.nav-icon:hover { background: rgba(222,44,147,.2); }
+.nav-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; text-decoration: none; background: rgba(47,50,136,.12); color: var(--orange); }
+.nav-icon:hover { background: rgba(47,50,136,.2); }
 .nav .menu a.active { color: var(--orange); border-bottom-color: var(--orange); }
 .nav .menu a { color: var(--text); border-bottom: 2px solid transparent; }
 .nav .menu a:hover { color: var(--orange); }
@@ -284,7 +284,7 @@ button, .btn, input, select, textarea {
   height: 320px;
   border-radius: 30px;
   pointer-events: none;
-  background: linear-gradient(135deg, var(--orange-light), rgba(222, 44, 147, 0.08));
+  background: linear-gradient(135deg, var(--orange-light), rgba(47, 50, 136, 0.08));
   z-index: 0;
 }
 .hero-shape-tl { top: -100px; left: -100px; transform: rotate(-15deg); }
@@ -367,7 +367,7 @@ button, .btn, input, select, textarea {
   font-size: 14px;
   font-weight: 800;
   border: 2px solid #fff;
-  box-shadow: 0 2px 12px rgba(222, 44, 147, 0.35);
+  box-shadow: 0 2px 12px rgba(47, 50, 136, 0.35);
   margin: 0 auto;
 }
 
@@ -407,7 +407,7 @@ button, .btn, input, select, textarea {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: rgba(222, 44, 147, 0.3);
+  background: rgba(47, 50, 136, 0.3);
   border: none;
   cursor: pointer;
   transition: background .2s;
@@ -464,15 +464,15 @@ button, .btn, input, select, textarea {
   padding: 14px 28px;
   border-radius: 999px;
   background: var(--orange);
-  color: #de2c93 !important;
+  color: #2f3288 !important;
   font-weight: 800;
   font-size: 16px;
   border: none;
   cursor: pointer;
   transition: background .2s, transform .2s;
 }
-.btn-consult-inline:hover { background: #000; color: #de2c93 !important; transform: scale(1.02); }
-.btn-consult-inline:active { background: #000; color: #de2c93 !important; }
+.btn-consult-inline:hover { background: #000; color: #2f3288 !important; transform: scale(1.02); }
+.btn-consult-inline:active { background: #000; color: #2f3288 !important; }
 
 /* ========== Shirt categories – รูปเดียว ข้อความด้านล่าง กดลิงก์ไปหน้าหมวดหมู่ ========== */
 .shirt-categories {
@@ -717,7 +717,7 @@ button, .btn, input, select, textarea {
 .trust-review-product {
   font-size: 16px;
   font-weight: 900;
-  color: var(--blue, #de2c93);
+  color: var(--blue, #2f3288);
   margin: 0;
   line-height: 1.3;
 }
@@ -808,7 +808,7 @@ button, .btn, input, select, textarea {
   text-align: var(--blue);
   font-weight: 800;
   font-size: 15px;
-  box-shadow: 0 4px 20px rgba(222, 44, 147, 0.45);
+  box-shadow: 0 4px 20px rgba(47, 50, 136, 0.45);
   transition: background .2s, transform .2s;
 }
 .sticky-consult:hover { background: var(--orange2); transform: scale(1.05); }
@@ -875,7 +875,7 @@ button, .btn, input, select, textarea {
     height:240px;
     border-radius:18px;
     border:1px dashed rgba(0, 0, 0, 0.18);
-    background:radial-gradient(500px 220px at 30% 30%, rgba(222,44,147,.22), transparent 60%);
+    background:radial-gradient(500px 220px at 30% 30%, rgba(47,50,136,.22), transparent 60%);
     overflow:hidden;
   }
   .mock-shirt{
@@ -886,7 +886,7 @@ button, .btn, input, select, textarea {
   }
   .mock-lines{
     position:absolute;inset:-30px -30px;
-    background:linear-gradient(45deg, rgba(222,44,147,.18) 0%, transparent 40%, rgba(232,90,168,.14) 80%);
+    background:linear-gradient(45deg, rgba(47,50,136,.18) 0%, transparent 40%, rgba(74,77,168,.14) 80%);
     transform:rotate(8deg);
   }
   
@@ -949,7 +949,7 @@ button, .btn, input, select, textarea {
     width: 280px;
     height: 280px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--orange-light), rgba(222,44,147,.06));
+    background: linear-gradient(135deg, var(--orange-light), rgba(47,50,136,.06));
     pointer-events: none;
   }
   .products-header {
@@ -994,7 +994,7 @@ button, .btn, input, select, textarea {
   }
   .products-search-wrap .products-search-input:focus {
     border-color: var(--orange);
-    box-shadow: 0 0 0 2px rgba(222, 44, 147, 0.15);
+    box-shadow: 0 0 0 2px rgba(47, 50, 136, 0.15);
   }
   .products-search-wrap .products-collar-select {
     padding: 8px 12px;
@@ -1212,7 +1212,7 @@ button, .btn, input, select, textarea {
   }
   .chip.active,.chip:hover{
     background: var(--orange-light);
-    border:1px solid rgba(222,44,147,.35);
+    border:1px solid rgba(47,50,136,.35);
     color:var(--text);
   }
   
@@ -1227,7 +1227,7 @@ button, .btn, input, select, textarea {
   .thumb{
     height:150px;border-radius:16px;
     border:1px solid rgba(255,255,255,.14);
-    background:radial-gradient(400px 180px at 30% 30%, rgba(222,44,147,.25), transparent 60%),
+    background:radial-gradient(400px 180px at 30% 30%, rgba(47,50,136,.25), transparent 60%),
                linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
     position:relative;overflow:hidden;
   }
@@ -1235,7 +1235,7 @@ button, .btn, input, select, textarea {
   .thumb::after{
     content:"";
     position:absolute;inset:-40px;
-    background:linear-gradient(45deg, rgba(232,90,168,.16), transparent 50%, rgba(222,44,147,.16));
+    background:linear-gradient(45deg, rgba(74,77,168,.16), transparent 50%, rgba(47,50,136,.16));
     transform:rotate(12deg);
   }
   .thumb:has(.thumb-img)::after{display:none}
@@ -1259,7 +1259,7 @@ button, .btn, input, select, textarea {
     border:1px solid var(--line);background:rgba(255,255,255,.03);
     color:var(--text);outline:none;font:inherit;
   }
-  .add-product-wrap select:focus{border-color:rgba(222,44,147,.5)}
+  .add-product-wrap select:focus{border-color:rgba(47,50,136,.5)}
   .image-preview-list--single .image-preview-item{width:100px;height:100px}
   
   /* ========== Lightbox – กดดูรูปขยาย ========== */
@@ -1346,7 +1346,7 @@ button, .btn, input, select, textarea {
   .modal-preview{
     min-height:260px;border-radius:16px;
     border:1px solid rgba(255,255,255,.14);
-    background:radial-gradient(500px 220px at 30% 30%, rgba(222,44,147,.25), transparent 60%),
+    background:radial-gradient(500px 220px at 30% 30%, rgba(47,50,136,.25), transparent 60%),
                linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
   }
   .modal-info{display:flex;flex-direction:column;gap:10px}
@@ -1377,7 +1377,7 @@ button, .btn, input, select, textarea {
     color:var(--text);
     outline:none;
   }
-  input:focus,textarea:focus{border-color:rgba(222,44,147,.5)}
+  input:focus,textarea:focus{border-color:rgba(47,50,136,.5)}
   
   .add-image-box{
     cursor:pointer;
@@ -1389,7 +1389,7 @@ button, .btn, input, select, textarea {
     position:relative;overflow:hidden;
     transition:border-color .2s, background .2s;
   }
-  .add-image-box:hover{border-color:rgba(255, 255, 255, 0.4);background:rgba(222,44,147,.06)}
+  .add-image-box:hover{border-color:rgba(255, 255, 255, 0.4);background:rgba(47,50,136,.06)}
   .add-image-box-placeholder{
     color:var(--muted);font-weight:700;font-size:15px;
     pointer-events:none;
@@ -1470,7 +1470,7 @@ button, .btn, input, select, textarea {
     }
     .header .menu.open a{ color:#1a1a1a; padding:12px 14px; display:block; }
     .header .menu.open a:hover{ color:var(--orange); background:var(--orange-light); border-radius:10px; }
-    .hamburger{display:inline-flex; color:#fff; border-color:rgba(255,255,255,.4); }
+    .hamburger{display:inline-flex; color:#1a1a1a; border-color:rgba(47,50,136,.6); }
     .hero-banner{min-height:260px; max-height:60vh;}
     .hero-slideshow{min-height:260px;}
     .sticky-consult{bottom:16px;right:16px;padding:12px 20px;font-size:14px;}
@@ -1497,7 +1497,7 @@ button, .btn, input, select, textarea {
   }
   .header .menu.open a{ color: #1a1a1a; padding: 12px 14px; display: block; }
   .header .menu.open a:hover{ color: var(--orange); background: var(--orange-light); border-radius: 10px; }
-  .hamburger{ display: inline-flex; color: #fff; border-color: rgba(255,255,255,.4); }
+  .hamburger{ display: inline-flex; color: #1a1a1a; border-color: rgba(47,50,136,.6); }
   .header-search{ order: 3; width: 100%; flex: 1 1 100%; min-width: 0; margin-top: 4px; }
   .header .logo-img{ height: 34px; }
   .logo-main{ font-size: 22px; }
