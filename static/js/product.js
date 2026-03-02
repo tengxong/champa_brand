@@ -87,16 +87,21 @@ const ProductPage = {
 
     const productImageUrl = (path) => {
       if (!path) return null;
-      return path.startsWith('/') ? path : '/static/' + path;
+      const p = (path || '').replace(/\\/g, '/').trim();
+      if (!p) return null;
+      return p.startsWith('/') ? p : '/static/' + p;
     };
     tbody.innerHTML = products.map(product => {
       const status = this.getStatus(product.stock);
       const productImage = productImageUrl(product.image);
-      const imageDisplay = productImage 
-        ? `<img src="${productImage}" alt="${product.name}" class="w-10 h-10 rounded-lg object-cover mr-3 border border-gray-200">`
+      const placeholderHtml = `<div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3 product-img-placeholder" style="display:none">
+            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+          </div>`;
+      const imageDisplay = productImage
+        ? `<span class="flex items-center"><img src="${productImage.replace(/"/g, '&quot;')}" alt="${(product.name || '').replace(/"/g, '&quot;')}" class="w-10 h-10 rounded-lg object-cover mr-3 border border-gray-200 product-img" onerror="this.style.display='none';var pl=this.nextElementSibling;if(pl)pl.style.display='flex'">${placeholderHtml}</span>`
         : `<div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
             <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
             </svg>
           </div>`;
       const descShort = truncate(product.description || '', 40);
