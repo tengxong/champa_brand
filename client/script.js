@@ -321,14 +321,34 @@ function applyFilter() {
   else if (activeChip) f = activeChip.dataset.filter || "all";
 
   if (grid) grid.removeAttribute("data-show-all");
-  const list = f === "all"
+  var list = f === "all"
     ? getAllProducts()
     : getAllProducts().filter((p) => {
-        // ใช้ category จาก product โดยตรง (komon, kovi, ko5lien, kopo)
-        // ถ้าไม่มี category ให้ fallback ไปใช้ getProductCategory(p.type) สำหรับสินค้าเก่า
         const category = p.category || getProductCategory(p.type);
         return category === f;
       });
+  // ถ้าหน้า products มีช่องค้นหาและเลือกคอ ให้กรองตามนั้นด้วย
+  var searchInput = document.getElementById("productsSearchInput");
+  var collarSelect = document.getElementById("productsCollarSelect");
+  if (searchInput) {
+    var searchTerm = searchInput.value.trim().toLowerCase();
+    if (searchTerm) {
+      list = list.filter(function (p) {
+        var title = (p.title || "").toLowerCase();
+        var desc = (p.desc || "").toLowerCase();
+        var cat = (p.category || "").toLowerCase();
+        return title.indexOf(searchTerm) !== -1 || desc.indexOf(searchTerm) !== -1 || cat.indexOf(searchTerm) !== -1;
+      });
+    }
+  }
+  if (collarSelect && collarSelect.value) {
+    var collarType = (collarSelect.value || "").trim();
+    if (collarType) {
+      list = list.filter(function (p) {
+        return (p.price_type || "").trim() === collarType;
+      });
+    }
+  }
   renderProducts(list);
 }
 
@@ -353,16 +373,18 @@ productsTabs.forEach((tab) => {
   var searchInput = document.getElementById("productsSearchInput");
   var collarSelect = document.getElementById("productsCollarSelect");
   var productsTabsList = document.querySelectorAll(".products-tab");
-  if (!searchBtn || !searchInput) return;
+  if (!searchInput) return;
 
   function doSearch() {
     var searchTerm = searchInput.value.trim().toLowerCase();
-    var collarType = collarSelect ? collarSelect.value : "";
+    var collarType = collarSelect ? (collarSelect.value || "").trim() : "";
     var list = getAllProducts();
     if (searchTerm) {
       list = list.filter(function (p) {
         var title = (p.title || "").toLowerCase();
-        return title.indexOf(searchTerm) !== -1;
+        var desc = (p.desc || "").toLowerCase();
+        var cat = (p.category || "").toLowerCase();
+        return title.indexOf(searchTerm) !== -1 || desc.indexOf(searchTerm) !== -1 || cat.indexOf(searchTerm) !== -1;
       });
     }
     if (collarType) {
@@ -373,28 +395,35 @@ productsTabs.forEach((tab) => {
     }
     if (typeof renderProducts === "function") renderProducts(list);
     if (grid) grid.removeAttribute("data-show-all");
+    // ตั้งแท็บหมวดหมู่ให้สอดคล้อง: ถ้าไม่ได้เลือกคอ = ใช้ all
     var tabToActivate = null;
     if (productsTabsList.length) {
-      for (var i = 0; i < productsTabsList.length; i++) {
-        if (productsTabsList[i].dataset.filter === (collarType || "all")) {
-          tabToActivate = productsTabsList[i];
-          break;
-        }
+      if (!collarType && !searchTerm) {
+        tabToActivate = document.querySelector('.products-tab[data-filter="all"]');
       }
-      if (!tabToActivate && !collarType) tabToActivate = document.querySelector('.products-tab[data-filter="all"]');
       if (tabToActivate) {
-        for (var j = 0; j < productsTabsList.length; j++) productsTabsList[j].classList.remove("active");
+        productsTabsList.forEach(function (t) { t.classList.remove("active"); });
         tabToActivate.classList.add("active");
       }
     }
   }
 
-  searchBtn.addEventListener("click", doSearch);
+  if (searchBtn) searchBtn.addEventListener("click", doSearch);
   searchInput.addEventListener("keydown", function (e) {
     if (e.key === "Enter") {
       e.preventDefault();
-      searchBtn.click();
+      doSearch();
     }
+  });
+  // เลือกประเภทคอแล้วแสดงผลทันที
+  if (collarSelect) {
+    collarSelect.addEventListener("change", doSearch);
+  }
+  // พิมพ์ค้นหาแล้วแสดงผลทันที (debounce 200ms)
+  var searchDebounce;
+  searchInput.addEventListener("input", function () {
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(doSearch, 200);
   });
   document.addEventListener("productsSearch", function (e) {
     var d = e.detail || {};
