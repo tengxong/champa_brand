@@ -48,16 +48,22 @@
   } else {
     applyLogoutLink();
   }
+  document.addEventListener("header-loaded", applyLogoutLink);
 })();
 
-// ===== NAV Mobile =====
-const hamburger = document.getElementById("hamburger");
-const menu = document.getElementById("menu");
-if (hamburger && menu) {
-  hamburger.addEventListener("click", () => {
-    menu.classList.toggle("open");
-  });
+// ===== NAV Mobile (รองรับทั้ง header ในหน้าและ header โหลดจาก partial) =====
+function bindHeaderNav() {
+  var hamburger = document.getElementById("hamburger");
+  var menu = document.getElementById("menu");
+  if (hamburger && menu && !hamburger._headerBound) {
+    hamburger._headerBound = true;
+    hamburger.addEventListener("click", function () {
+      menu.classList.toggle("open");
+    });
+  }
 }
+bindHeaderNav();
+document.addEventListener("header-loaded", bindHeaderNav);
 
 // ===== Hero carousel (Finix-style) =====
 let heroSlideIndex = 0;
@@ -833,11 +839,13 @@ if (contactForm) {
 
 // ===== Search ทั่วเว็บ (ຄົ້ນຫາ) =====
 (function () {
-  var input = document.getElementById("siteSearchInput");
-  var resultsEl = document.getElementById("siteSearchResults");
-  if (!input || !resultsEl) return;
+  function initSiteSearch() {
+    var input = document.getElementById("siteSearchInput");
+    var resultsEl = document.getElementById("siteSearchResults");
+    if (!input || !resultsEl || input._searchBound) return;
+    input._searchBound = true;
 
-  var pages = [
+    var pages = [
     { title: "ຫນ້າຫຼັກ", url: "index.html", label: "ໜ້າ" },
     { title: "ສິນຄ້າ", url: "products.html", label: "ໜ້າ" },
     { title: "ສິນຄ້າລີວິວ", url: "products-review.html", label: "ໜ້າ" },
@@ -892,6 +900,9 @@ if (contactForm) {
   document.addEventListener("click", function (e) {
     if (!e.target.closest("#headerSearchWrap")) resultsEl.hidden = true;
   });
+  }
+  initSiteSearch();
+  document.addEventListener("header-loaded", initSiteSearch);
 })();
 
 // ໜ້າສິນຄ້າ: ຖ້າມີ ?search= ໃນ URL ໃຫ້ກອງສິນຄ້າຕາມຄຳຄົ້ນຫາ

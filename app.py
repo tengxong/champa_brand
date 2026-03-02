@@ -37,10 +37,18 @@ from pyhon import (
 )
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER_PROFILE'] = 'static/uploads/profile'
-app.config['UPLOAD_FOLDER_PRODUCT'] = 'static/uploads/product'
+# ใช้ absolute path เพื่อให้รูปโหลดได้ไม่ว่า CWD จะอยู่ที่ไหน (รวมตอน deploy)
+_base = os.path.dirname(os.path.abspath(__file__))
+app.config['UPLOAD_FOLDER_PROFILE'] = os.path.join(_base, 'static', 'uploads', 'profile')
+app.config['UPLOAD_FOLDER_PRODUCT'] = os.path.join(_base, 'static', 'uploads', 'product')
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5MB max file size
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+
+def _normalize_image_path(path):
+    """ให้ path รูปใช้ forward slash เสมอ เพื่อให้ URL ใช้ได้ทุกที่"""
+    if not path or not isinstance(path, str):
+        return path
+    return path.replace("\\", "/")
 
 # สร้างโฟลเดอร์สำหรับเก็บรูปภาพ
 os.makedirs(app.config['UPLOAD_FOLDER_PROFILE'], exist_ok=True)
@@ -296,7 +304,7 @@ def api_products_public():
         guest = User(id=0, username="guest", phone=None, password_hash="", role="customer")
         products = list_products(guest)
         return jsonify([
-            {"id": p.id, "name": p.name, "price": p.price, "stock": p.stock, "image": p.image, "description": p.description, "category": p.category, "price_type": p.price_type}
+            {"id": p.id, "name": p.name, "price": p.price, "stock": p.stock, "image": _normalize_image_path(p.image), "description": p.description, "category": p.category, "price_type": p.price_type}
             for p in products
         ])
     except Exception as e:
@@ -465,7 +473,7 @@ def api_admin_upload_profile():
                 cur.execute("SELECT profile_image FROM users WHERE id = %s", (user.id,))
                 old_image = cur.fetchone()
                 if old_image and old_image[0]:
-                    old_path = os.path.join('static', old_image[0])
+                    old_path = os.path.join(_base, 'static', old_image[0])
                     if os.path.exists(old_path):
                         try:
                             os.remove(old_path)
@@ -534,7 +542,7 @@ def api_admin_products_upload_image(product_id):
                 cur.execute("SELECT image FROM products WHERE id = %s", (product_id,))
                 old_image = cur.fetchone()
                 if old_image and old_image[0]:
-                    old_path = os.path.join('static', old_image[0])
+                    old_path = os.path.join(_base, 'static', old_image[0])
                     if os.path.exists(old_path):
                         try:
                             os.remove(old_path)
@@ -568,7 +576,7 @@ def api_admin_products_list():
         return err[0], err[1]
     try:
         products = list_products(user)
-        return jsonify([{"id": p.id, "name": p.name, "price": p.price, "stock": p.stock, "image": p.image, "description": p.description, "category": p.category, "price_type": p.price_type} for p in products])
+        return jsonify([{"id": p.id, "name": p.name, "price": p.price, "stock": p.stock, "image": _normalize_image_path(p.image), "description": p.description, "category": p.category, "price_type": p.price_type} for p in products])
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
@@ -594,7 +602,7 @@ def api_admin_products_create():
         return jsonify({"error": "กรุณากรอกชื่อสินค้า"}), 400
     try:
         p = create_product(user, name=name, price=price, stock=stock, description=description, category=category, price_type=price_type)
-        return jsonify({"id": p.id, "name": p.name, "price": p.price, "stock": p.stock, "image": p.image, "description": p.description, "category": p.category, "price_type": p.price_type}), 201
+        return jsonify({"id": p.id, "name": p.name, "price": p.price, "stock": p.stock, "image": _normalize_image_path(p.image), "description": p.description, "category": p.category, "price_type": p.price_type}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
@@ -625,7 +633,7 @@ def api_admin_products_update(product_id):
         return jsonify({"error": "stock ต้องเป็นจำนวนเต็มที่ถูกต้อง"}), 400
     try:
         p = update_product(user, str(product_id), name=name, price=price, stock=stock, description=description, category=category, price_type=price_type)
-        return jsonify({"id": p.id, "name": p.name, "price": p.price, "stock": p.stock, "image": p.image, "description": p.description, "category": p.category, "price_type": p.price_type})
+        return jsonify({"id": p.id, "name": p.name, "price": p.price, "stock": p.stock, "image": _normalize_image_path(p.image), "description": p.description, "category": p.category, "price_type": p.price_type})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
